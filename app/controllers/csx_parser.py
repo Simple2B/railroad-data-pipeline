@@ -13,5 +13,7 @@ class CSXParser(BaseParser):
         raise NotImplementedError()
 
     def parse_data(self, file=None):
+        if not file:
+            file = self.file
         plread = PyPDF2.PdfFileReader(file)
         plread
