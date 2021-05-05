@@ -8,7 +8,8 @@ class Company(db.Model, ModelMixin):
 
     __tablename__ = "companies"
 
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.String)
     carloads = db.Column(db.Integer)
     QTDCarloads = db.Column(db.Integer, nullable=False)
     YOYQTDCarloads = db.Column(db.Integer, nullable=True)

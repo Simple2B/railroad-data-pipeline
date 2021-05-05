@@ -3,7 +3,7 @@
     <!-- <h3>Companies Report</h3> -->
     <br/>
     <table>
-        <tr>
+        <th>
             <th>ID</th>
             <th>Carloads</th>
             <th>YOYCarloads</th>
@@ -16,22 +16,23 @@
             <th>Year</th>
             <th>Company</th>
             <th>Type</th>
-        </tr>
+        </th>
+        {% for c in companies %}
 
         <tr>
-            <td>CSX_2019_4_10</td>
-            <td>2561</td>
-            <td>11</td>
-            <td>11910</td>
-            <td>1555</td>
-            <td>11910</td>
-            <td>1555</td>
-            <td>1/26/2019</td>
-            <td>4</td>
-            <td>2019</td>
-            <td>CSX</td>
-            <td>Grain</td>
+            <td>{{c.company_id}}</td>
+            <td>{{c.carloads}}</td>
+            <td>{{c.QTDCarloads}}</td>
+            <td>{{c.YOYQTDCarloads}}</td>
+            <td>{{c.YTDCarloads}}</td>
+            <td>{{c.YOYYDCarloads}}</td>
+            <td>{{c.parse_date}}</td>
+            <td>{{c.week}}</td>
+            <td>{{c.year}}</td>
+            <td>{{c.company_name}}</td>
+            <td>{{c.product_type}}</td>
         </tr>
+        {% endfor %}
 
         <tr>
             <td>CSX_2019_4_10</td>
