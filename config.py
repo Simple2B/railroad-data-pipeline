@@ -14,6 +14,8 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
 
+    CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", None)
+
     @staticmethod
     def configure(app):
         # Implement this method to do further configuration on your app.

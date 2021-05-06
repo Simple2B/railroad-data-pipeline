@@ -25,6 +25,7 @@ def drop_db():
     """Drop the current database."""
     db.drop_all()
 
+
 @app.cli.command()
 @click.confirmation_option(prompt="Drop all database tables?")
 def reset_db():
