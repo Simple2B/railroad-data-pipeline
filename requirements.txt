@@ -17,4 +17,3 @@ selenium
 flake8
 black
 pytest
-

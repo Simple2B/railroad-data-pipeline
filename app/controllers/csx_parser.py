@@ -1,8 +1,10 @@
 from urllib.request import urlopen
+from .base_parser import BaseParser
 import PyPDF2
-from .parser import BaseParser
 from .scrapper import scrapper
 from app.logger import log
+
+# import re
 
 
 class CSXParser(BaseParser):
@@ -24,5 +26,28 @@ class CSXParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        plread = PyPDF2.PdfFileReader(file)
-        plread
+        # with open(file, "rb") as pdfFile:
+        pdfReader = PyPDF2.PdfFileReader(file)
+        pages = pdfReader.numPages
+        pages
+
+        pg = pdfReader.getPage(0)
+        #print(pg)
+        textPdf = pg.extractText()
+        textPdf
+
+        # pages = pdfReader.getNumPages()
+
+        # body_text = ''
+
+        # for p in pages:
+        #     page = pdfReader.getPage(p)
+        #     text = page.extractText
+
+        #     rex = re.compile("(?<=\%\%\(S\$\))(.*)", re.DOTALL)
+        #     body_text = re.search(rex, text).group(0)
+        #     body_text
+
+            # titles = re.findall(r'([a-zA-Z\s])(?=\n)', body)
+
+            # for title in titles:
