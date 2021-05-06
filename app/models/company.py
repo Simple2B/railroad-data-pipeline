@@ -11,6 +11,7 @@ class Company(db.Model, ModelMixin):
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.String)
     carloads = db.Column(db.Integer)
+    YOYCarloads = db.Column(db.Integer, nullable=True)
     QTDCarloads = db.Column(db.Integer, nullable=False)
     YOYQTDCarloads = db.Column(db.Integer, nullable=True)
     YTDCarloads = db.Column(db.Integer, nullable=False)

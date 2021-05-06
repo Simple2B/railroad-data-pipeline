@@ -14,4 +14,3 @@ PyPDF2
 flake8
 black
 pytest
-
