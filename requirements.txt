@@ -10,6 +10,9 @@ Werkzeug
 WTForms
 
 PyPDF2
+requests
+beautifulsoup4
+selenium
 
 flake8
 black
