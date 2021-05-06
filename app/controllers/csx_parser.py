@@ -1,5 +1,6 @@
 from .base_parser import BaseParser
-from PyPDF2 import PdfFileReader
+import PyPDF2
+
 # import re
 
 
@@ -19,6 +20,7 @@ class CSXParser(BaseParser):
         # with open(file, "rb") as pdfFile:
         pdfReader = PyPDF2.PdfFileReader(file)
         pages = pdfReader.numPages
+        pages
 
         pg = pdfReader.getPage(0)
         #print(pg)
