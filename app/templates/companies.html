@@ -3,7 +3,7 @@
     <!-- <h3>Companies Report</h3> -->
     <br/>
     <table>
-        <th>
+        <tr>
             <th>ID</th>
             <th>Carloads</th>
             <th>YOYCarloads</th>
@@ -16,12 +16,12 @@
             <th>Year</th>
             <th>Company</th>
             <th>Type</th>
-        </th>
+        </tr>
         {% for c in companies %}
-
         <tr>
             <td>{{c.company_id}}</td>
             <td>{{c.carloads}}</td>
+            <td>{{c.YOYCarloads}}</td>
             <td>{{c.QTDCarloads}}</td>
             <td>{{c.YOYQTDCarloads}}</td>
             <td>{{c.YTDCarloads}}</td>
