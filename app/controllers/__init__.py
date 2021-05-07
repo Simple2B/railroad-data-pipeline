@@ -2,3 +2,4 @@
 from .csx_parser import CSXParser
 from .scrapper import scrapper
 from .base_parser import BaseParser
+from .union_parser import UnionParser
