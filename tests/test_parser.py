@@ -3,7 +3,8 @@ import pytest
 
 from app import db, create_app
 
-# from app.controllers import CSXParser
+from app.controllers import CSXParser
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/2020-Week-1-AAR.pdf')
@@ -30,7 +31,8 @@ def test_main_page(client):
     assert response.status_code == 200
 
 
-# def test_csx_parser(client):
-#     parser = CSXParser()
-#     with open(CSX_TEST_DATA_FILE, "rb") as file:
-#         parser.parse_data(file=file)
+def test_csx_parser(client):
+    parser = CSXParser(2020, 1)
+    with open(CSX_TEST_DATA_FILE, "rb") as file:
+        filePdf = parser.parse_data(file=file)
+        assert filePdf

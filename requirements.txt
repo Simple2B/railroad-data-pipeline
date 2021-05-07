@@ -10,6 +10,20 @@ Werkzeug
 WTForms
 
 PyPDF2
+more-itertools
+
+pdfplumber
+tabula
+tabulate
+pandas
+pdfminer
+pdfminer.six
+pprintpp
+camelot-py
+camelot-py[cv]
+lxml
+
+text-extractor
 requests
 beautifulsoup4
 selenium
