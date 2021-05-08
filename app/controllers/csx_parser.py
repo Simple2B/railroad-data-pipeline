@@ -1,10 +1,11 @@
-from urllib.request import urlopen
-from .base_parser import BaseParser
+import re
+import datefinder
 import PyPDF2
+from urllib.request import urlopen
 from .scrapper import scrapper
+from .base_parser import BaseParser
 from app.logger import log
-
-# import re
+from app.models import Company
 
 
 class CSXParser(BaseParser):
@@ -15,7 +16,7 @@ class CSXParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        file_url = scrapper('csx', self.week_no, self.year_no, self.URL)
+        file_url = scrapper("csx", self.week_no, self.year_no, self.URL)
         file = urlopen(file_url)
         if file:
             self.file = file
@@ -26,28 +27,90 @@ class CSXParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        # with open(file, "rb") as pdfFile:
-        pdfReader = PyPDF2.PdfFileReader(file)
-        pages = pdfReader.numPages
-        pages
 
-        pg = pdfReader.getPage(0)
-        #print(pg)
-        textPdf = pg.extractText()
-        textPdf
+        pdf_text = ""
+        # reads each of the pdf pages
+        pdf_reader = PyPDF2.PdfFileReader(file)
+        for page_number in range(pdf_reader.numPages):
+            page = pdf_reader.getPage(page_number)
+            pdf_text += page.extractText()
 
-        # pages = pdfReader.getNumPages()
+        # remove spaces from the text that we read from the pdf file
+        format_text = re.sub("\n", " ", pdf_text)
 
-        # body_text = ''
+        # the text of which we have a string we make an array of values from it
+        # text_elem = format_text.split()[12:]
+        format_text = " ".join(format_text.split()[12:])
+        PATERN = (
+            r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
+            r"(?P<w_current_year>[0-9\,]+)\s+"
+            r"(?P<w_previous_year>[0-9\,]+)\s+"
+            r"(?P<w_chg>[0-9\.\%\-]+)\s+"
+            r"(?P<q_current_year>[0-9\,]+)\s+"
+            r"(?P<q_previous_year>[0-9\,]+)\s+"
+            r"(?P<q_chg>[0-9\.\%\-]+)\s+"
+            r"(?P<y_current_year>[0-9\,]+)\s+"
+            r"(?P<y_previous_year>[0-9\,]+)\s+"
+            r"(?P<y_chg>[0-9\.\%\-]+)"
+        )
 
-        # for p in pages:
-        #     page = pdfReader.getPage(p)
-        #     text = page.extractText
+        # get the date of report from the general text
+        matches = datefinder.find_dates(format_text)
+        month = ''
+        day = ''
+        year = ''
 
-        #     rex = re.compile("(?<=\%\%\(S\$\))(.*)", re.DOTALL)
-        #     body_text = re.search(rex, text).group(0)
-        #     body_text
+        for match in matches:
+            month = match.month
+            day = match.day
+            year = match.year
 
-            # titles = re.findall(r'([a-zA-Z\s])(?=\n)', body)
+        # list of all products
+        products = {}
 
-            # for title in titles:
+        def get_int_val(val: str) -> int:
+            return int(val.replace(",", ""))
+
+        for line in re.finditer(PATERN, format_text):
+            products[line["name"]] = dict(
+                week=dict(
+                    current_year=get_int_val(line["w_current_year"]),
+                    previous_year=get_int_val(line["w_previous_year"]),
+                    chg=line["w_chg"],
+                ),
+                QUARTER_TO_DATE=dict(
+                    current_year=get_int_val(line["q_current_year"]),
+                    previous_year=get_int_val(line["q_previous_year"]),
+                    chg=line["q_chg"],
+                ),
+                YEAR_TO_DATE=dict(
+                    current_year=get_int_val(line["y_current_year"]),
+                    previous_year=get_int_val(line["y_previous_year"]),
+                    chg=line["y_chg"],
+                ),
+            )
+
+        # write data to the database
+        for prod_name in products:
+            company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
+            conpany = Company.query.filter(Company.company_id == company_id).first()
+            if not conpany:
+                Company(
+                    company_id=company_id,
+                    carloads=products[prod_name]["week"]["current_year"],
+                    YOYCarloads=products[prod_name]["week"]["current_year"]
+                    - products[prod_name]["week"]["previous_year"],
+                    QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
+                    YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
+                        "current_year"
+                    ]
+                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
+                    date=f"{month}/{day}/{year}",
+                    week=self.week_no,
+                    year=self.year_no,
+                    company_name="CSX",
+                    product_type=products[prod_name],
+                ).save()

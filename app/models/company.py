@@ -16,7 +16,7 @@ class Company(db.Model, ModelMixin):
     YOYQTDCarloads = db.Column(db.Integer, nullable=True)
     YTDCarloads = db.Column(db.Integer, nullable=False)
     YOYYDCarloads = db.Column(db.Integer, nullable=True)
-    parse_date = db.Column(db.DateTime, default=datetime.now)
+    date = db.Column(db.DateTime, default=datetime.now)
     week = db.Column(db.Integer)
     year = db.Column(db.Integer)
     company_name = db.Column(db.String)
