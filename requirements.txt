@@ -1,4 +1,5 @@
 click
+re
 Flask
 Flask-SQLAlchemy
 itsdangerous
@@ -10,6 +11,7 @@ Werkzeug
 WTForms
 
 PyPDF2
+datefinder
 more-itertools
 
 pdfplumber
