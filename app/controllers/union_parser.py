@@ -1,6 +1,7 @@
 import requests
 from .base_parser import BaseParser
 import PyPDF2
+# import camelot
 from .scrapper import scrapper
 from app.logger import log
 
@@ -26,7 +27,7 @@ class UnionParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        # with open(file, "rb") as pdfFile:
+
         pdfReader = PyPDF2.PdfFileReader(file)
         pages = pdfReader.numPages
         pages
@@ -34,3 +35,10 @@ class UnionParser(BaseParser):
         pg = pdfReader.getPage(0)
         textPdf = pg.extractText()
         textPdf
+
+        # df_list = []
+        # results = camelot.read_pdf(file)
+        # results
+        # for table in results:
+        #     t = table.parsing_report
+        #     df_list.append(results[0].df)
