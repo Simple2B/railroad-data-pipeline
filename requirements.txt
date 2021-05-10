@@ -12,6 +12,7 @@ WTForms
 
 PyPDF2
 datefinder
+tika
 more-itertools
 
 pdfplumber
