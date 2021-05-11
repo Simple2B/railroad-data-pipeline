@@ -33,8 +33,8 @@ def test_union_scraper():
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_kansas_city_southern_scraper():
-    union = KansasCitySouthernParser(2021, 1)
-    assert union
-    assert union.file is None
-    assert union.get_file()
-    assert union.file
+    kansas_city_southern = KansasCitySouthernParser(2021, 1)
+    assert kansas_city_southern
+    assert kansas_city_southern.file is None
+    assert kansas_city_southern.get_file()
+    assert kansas_city_southern.file
