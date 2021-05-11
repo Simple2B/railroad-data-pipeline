@@ -1,5 +1,6 @@
 import re
 import datefinder
+from datetime import datetime
 import PyPDF2
 from urllib.request import urlopen
 from .scrapper import scrapper
@@ -56,14 +57,17 @@ class CSXParser(BaseParser):
 
         # get the date of report from the general text
         matches = datefinder.find_dates(format_text)
-        month = ''
-        day = ''
-        year = ''
+
+        month = ""
+        day = ""
+        year = ""
 
         for match in matches:
             month = match.month
             day = match.day
             year = match.year
+
+        date_time_str = f"{month}/{day}/{year}"
 
         # list of all products
         products = {}
@@ -108,7 +112,7 @@ class CSXParser(BaseParser):
                     YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
                     YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
                     - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=f"{month}/{day}/{year}",
+                    date=datetime.strptime(date_time_str, "%m/%d/%y"),
                     week=self.week_no,
                     year=self.year_no,
                     company_name="CSX",

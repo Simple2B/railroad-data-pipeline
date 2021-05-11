@@ -12,6 +12,8 @@ WTForms
 
 PyPDF2
 datefinder
+pdfminer.six
+
 tika
 more-itertools
 
