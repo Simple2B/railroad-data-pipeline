@@ -1,6 +1,8 @@
 import requests
+# import copy
 from .base_parser import BaseParser
 import PyPDF2
+# import textract
 # import camelot
 from .scrapper import scrapper
 from app.logger import log
@@ -28,11 +30,16 @@ class UnionParser(BaseParser):
         if not file:
             file = self.file
 
+        # text = textract.process(file)
+        # text
+
         pdfReader = PyPDF2.PdfFileReader(file)
         pages = pdfReader.numPages
         pages
 
         pg = pdfReader.getPage(0)
+        # copy_pdfPage = copy.deepcopy(pg)
+        # copy_pdfPage
         textPdf = pg.extractText()
         textPdf
 

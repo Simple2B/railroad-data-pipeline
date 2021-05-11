@@ -1,5 +1,6 @@
 click
 re
+pycopy-copy
 Flask
 Flask-SQLAlchemy
 itsdangerous
@@ -13,6 +14,7 @@ WTForms
 PyPDF2
 datefinder
 pdfminer.six
+textract
 
 tika
 more-itertools
