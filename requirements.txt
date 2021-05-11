@@ -1,6 +1,5 @@
 click
-re
-pycopy-copy
+# pycopy-copy
 Flask
 Flask-SQLAlchemy
 itsdangerous
@@ -13,21 +12,19 @@ WTForms
 
 PyPDF2
 datefinder
-pdfminer.six
-textract
+# pdfminer.six
+# textract
 
-tika
-more-itertools
+# tika
+# more-itertools
 
-pdfplumber
-tabula
-tabulate
-pandas
-pdfminer
-pdfminer.six
-pprintpp
-camelot-py
-camelot-py[cv]
+# pdfplumber
+# tabula
+# tabulate
+# pdfminer
+# pprintpp
+# camelot-py
+# camelot-py[cv]
 lxml
 
 text-extractor

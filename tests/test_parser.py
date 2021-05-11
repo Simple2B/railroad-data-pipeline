@@ -4,6 +4,7 @@ import pytest
 from app import db, create_app
 
 from app.controllers import CSXParser, UnionParser
+from app.models import Company, company
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -35,8 +36,11 @@ def test_main_page(client):
 def test_csx_parser(client):
     parser = CSXParser(2020, 1)
     with open(CSX_TEST_DATA_FILE, "rb") as file:
-        filePdf = parser.parse_data(file=file)
-        assert filePdf
+        parser.parse_data(file=file)
+    COMPANY_ID = "CSX_2020_1_XX"
+    parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    assert parsed_data
+    assert len(parsed_data) == 25
 
 
 def test_union_parser(client):

@@ -3,6 +3,7 @@ import datefinder
 from datetime import datetime
 import PyPDF2
 from urllib.request import urlopen
+from sqlalchemy import and_
 from .scrapper import scrapper
 from .base_parser import BaseParser
 from app.logger import log
@@ -42,7 +43,7 @@ class CSXParser(BaseParser):
         # the text of which we have a string we make an array of values from it
         # text_elem = format_text.split()[12:]
         format_text = " ".join(format_text.split()[12:])
-        PATERN = (
+        PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
             r"(?P<w_current_year>[0-9\,]+)\s+"
             r"(?P<w_previous_year>[0-9\,]+)\s+"
@@ -67,7 +68,7 @@ class CSXParser(BaseParser):
             day = match.day
             year = match.year
 
-        date_time_str = f"{month}/{day}/{year}"
+        date = datetime(month=month, day=day, year=year)
 
         # list of all products
         products = {}
@@ -75,8 +76,8 @@ class CSXParser(BaseParser):
         def get_int_val(val: str) -> int:
             return int(val.replace(",", ""))
 
-        for line in re.finditer(PATERN, format_text):
-            products[line["name"]] = dict(
+        for line in re.finditer(PATTERN, format_text):
+            products[line["name"].strip()] = dict(
                 week=dict(
                     current_year=get_int_val(line["w_current_year"]),
                     previous_year=get_int_val(line["w_previous_year"]),
@@ -97,8 +98,12 @@ class CSXParser(BaseParser):
         # write data to the database
         for prod_name in products:
             company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
-            conpany = Company.query.filter(Company.company_id == company_id).first()
-            if not conpany:
+            company = Company.query.filter(
+                and_(
+                    Company.company_id == company_id, Company.product_type == prod_name
+                )
+            ).first()
+            if not company:
                 Company(
                     company_id=company_id,
                     carloads=products[prod_name]["week"]["current_year"],
@@ -112,9 +117,9 @@ class CSXParser(BaseParser):
                     YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
                     YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
                     - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=datetime.strptime(date_time_str, "%m/%d/%y"),
+                    date=date,
                     week=self.week_no,
                     year=self.year_no,
                     company_name="CSX",
-                    product_type=products[prod_name],
+                    product_type=prod_name,
                 ).save()
