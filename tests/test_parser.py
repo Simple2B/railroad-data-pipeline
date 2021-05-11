@@ -40,7 +40,7 @@ def test_csx_parser(client):
 
 
 def test_union_parser(client):
-    parser = UnionParser(2021, 16)
+    parser = UnionParser(2020, 15)
     with open(UNION_TEST_DATA_FILE, "rb") as file:
         filePdf = parser.parse_data(file=file)
         assert filePdf
