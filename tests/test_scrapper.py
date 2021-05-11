@@ -1,5 +1,5 @@
 import pytest
-from app.controllers import CSXParser, scrapper, UnionParser
+from app.controllers import CSXParser, scrapper, UnionParser, KansasCitySouthernParser
 from config import BaseConfig as conf
 
 
@@ -8,6 +8,8 @@ def test_scrapper():
     scrap = scrapper("csx", 20, 2020, "https://investors.csx.com/metrics/default.aspx")
     assert scrap
     scrap = scrapper("union", 12, 2021, "https://www.up.com/investor/aar-stb_reports/2021_Carloads/index.htm")
+    assert scrap
+    scrap = scrapper("kansas_city_southern", 2, 2021, "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en")
     assert scrap
 
 
@@ -23,6 +25,15 @@ def test_csx_scrapper():
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_union_scraper():
     union = UnionParser(2021, 15)
+    assert union
+    assert union.file is None
+    assert union.get_file()
+    assert union.file
+
+
+@pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
+def test_kansas_city_southern_scraper():
+    union = KansasCitySouthernParser(2021, 1)
     assert union
     assert union.file is None
     assert union.get_file()
