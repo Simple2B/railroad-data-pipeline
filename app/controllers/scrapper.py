@@ -48,7 +48,7 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
         log(log.WARNING, "Links not found")
         return None
     elif company == 'kansas_city_southern':
-        links = soup.find_all('a', class_='pdf')
+        links = soup.find_all('a', class_='ext-link')
         for i in links:
             scrap_data = i.text.split()
             scrap_week = scrap_data[1]
