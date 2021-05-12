@@ -9,6 +9,7 @@ from app.models import Company
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/2020-Week-1-AAR.pdf')
+UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/pdf_unp_week_16_carloads.pdf')
 
 UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/pdf_unp_week_16_carloads.pdf')
 

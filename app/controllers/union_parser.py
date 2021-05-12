@@ -4,6 +4,7 @@ import requests
 # from datetime import datetime
 from .base_parser import BaseParser
 import PyPDF2
+# import camelot
 from .scrapper import scrapper
 from app.logger import log
 # from app.models import Company
