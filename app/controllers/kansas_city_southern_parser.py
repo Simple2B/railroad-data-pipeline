@@ -60,7 +60,11 @@ class KansasCitySouthernParser(BaseParser):
             day = match.day
             year = match.year
 
-        date_time_str = f"{month}/{day}/{year}"
+        # date_time_str = f"{month}/{day}/{year}"
+
+        # date_time_obj = datetime.strptime(date_time_str, "%m/%d/%y")
+
+        date = datetime(month=month, day=day, year=year)
 
         # list of all products
         products = {}
@@ -78,8 +82,8 @@ class KansasCitySouthernParser(BaseParser):
         # write data to the database
         for prod_name in products:
             company_id = f"Kansas_City_Southern_{self.year_no}_{self.week_no}_XX"
-            conpany = Company.query.filter(Company.company_id == company_id).first()
-            if not conpany:
+            company = Company.query.filter(Company.company_id == company_id).first()
+            if not company:
                 Company(
                     company_id=company_id,
                     carloads=products[prod_name]["Consolidated"],
@@ -90,11 +94,9 @@ class KansasCitySouthernParser(BaseParser):
                     YTDCarloads=None,
                     YOYYDCarloads=None,
 
-                    date=datetime.strptime(date_time_str, "%m/%d/%y"),
+                    date=date,
                     week=self.week_no,
                     year=self.year_no,
                     company_name="Kansas City Southern",
-                    product_type=products[prod_name],
+                    product_type=prod_name,
                 ).save()
-
-        return products

@@ -4,6 +4,7 @@ import pytest
 from app import db, create_app
 
 from app.controllers import CSXParser, UnionParser, KansasCitySouthernParser
+from app.models import Company
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -38,19 +39,28 @@ def test_main_page(client):
 def test_csx_parser(client):
     parser = CSXParser(2020, 1)
     with open(CSX_TEST_DATA_FILE, "rb") as file:
-        filePdf = parser.parse_data(file=file)
-        assert filePdf
+        parser.parse_data(file=file)
+    COMPANY_ID = "CSX_2020_1_XX"
+    parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    assert parsed_data
+    # assert len(parsed_data) == 25
 
 
 def test_union_parser(client):
     parser = UnionParser(2021, 2)
     with open(UNION_TEST_DATA_FILE, "rb") as file:
-        filePdf = parser.parse_data(file=file)
-        assert filePdf
+        parser.parse_data(file=file)
+    COMPANY_ID = "Kansas_City_Southern_2021_2_XX"
+    parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    assert parsed_data
+    assert len(parsed_data) == 25
 
 
 def test_kansas_city_southern_parser(client):
     parser = KansasCitySouthernParser(2021, 2)
     with open(KANSAS_CITY_SOUTHERN_TEST_DATA_FILE, "rb") as file:
-        filePdf = parser.parse_data(file=file)
-        assert filePdf
+        parser.parse_data(file=file)
+    COMPANY_ID = "Kansas_City_Southern_2021_2_XX"
+    parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    assert parsed_data
+    # assert len(parsed_data) == 24

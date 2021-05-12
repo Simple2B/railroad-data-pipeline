@@ -1,5 +1,6 @@
 import re
 import datefinder
+from datetime import datetime
 import PyPDF2
 from urllib.request import urlopen
 from .scrapper import scrapper
@@ -65,6 +66,8 @@ class CSXParser(BaseParser):
             day = match.day
             year = match.year
 
+        date = datetime(month=month, day=day, year=year)
+
         # list of all products
         products = {}
 
@@ -91,26 +94,26 @@ class CSXParser(BaseParser):
             )
 
         # write data to the database
-        for prod_name in products:
+        for prod_name, product in products.items():
             company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
-            conpany = Company.query.filter(Company.company_id == company_id).first()
-            if not conpany:
+            company = Company.query.filter(Company.company_id == company_id).first()
+            if not company:
                 Company(
                     company_id=company_id,
-                    carloads=products[prod_name]["week"]["current_year"],
-                    YOYCarloads=products[prod_name]["week"]["current_year"]
-                    - products[prod_name]["week"]["previous_year"],
-                    QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
-                    YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
+                    carloads=product["week"]["current_year"],
+                    YOYCarloads=product["week"]["current_year"]
+                    - product["week"]["previous_year"],
+                    QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
+                    YOYQTDCarloads=product["QUARTER_TO_DATE"][
                         "current_year"
                     ]
-                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=f"{month}/{day}/{year}",
+                    - product["QUARTER_TO_DATE"]["previous_year"],
+                    YTDCarloads=product["YEAR_TO_DATE"]["current_year"],
+                    YOYYDCarloads=product["YEAR_TO_DATE"]["current_year"]
+                    - product["YEAR_TO_DATE"]["previous_year"],
+                    date=date,
                     week=self.week_no,
                     year=self.year_no,
                     company_name="CSX",
-                    product_type=products[prod_name],
+                    product_type=prod_name,
                 ).save()

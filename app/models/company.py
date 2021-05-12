@@ -13,9 +13,9 @@ class Company(db.Model, ModelMixin):
     carloads = db.Column(db.Integer)
 
     YOYCarloads = db.Column(db.Integer, nullable=True)
-    QTDCarloads = db.Column(db.Integer, nullable=False)
+    QTDCarloads = db.Column(db.Integer, nullable=True)
     YOYQTDCarloads = db.Column(db.Integer, nullable=True)
-    YTDCarloads = db.Column(db.Integer, nullable=False)
+    YTDCarloads = db.Column(db.Integer, nullable=True)
     YOYYDCarloads = db.Column(db.Integer, nullable=True)
 
     date = db.Column(db.DateTime, default=datetime.now)
