@@ -9,7 +9,13 @@ from app.models import Company
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/2020-Week-1-AAR.pdf')
+<<<<<<< HEAD
 UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/pdf_unp_week_16_carloads.pdf')
+=======
+
+UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/pdf_unp_week_16_carloads.pdf')
+
+>>>>>>> develop
 KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/week-17-05-01-2021-aar-carloads.pdf')
 BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/20210508.pdf')
 
@@ -42,14 +48,14 @@ def test_csx_parser(client):
     COMPANY_ID = "CSX_2020_1_XX"
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
-    # assert len(parsed_data) == 25
+    assert len(parsed_data) == 25
 
 
 def test_union_parser(client):
     parser = UnionParser(2021, 2)
     with open(UNION_TEST_DATA_FILE, "rb") as file:
         parser.parse_data(file=file)
-    COMPANY_ID = "Kansas_City_Southern_2021_2_XX"
+    COMPANY_ID = "Union_Pacific_2021_2_XX"
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
     # assert len(parsed_data) == 25
@@ -62,6 +68,7 @@ def test_kansas_city_southern_parser(client):
     COMPANY_ID = "Kansas_City_Southern_2021_2_XX"
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
+<<<<<<< HEAD
     # assert len(parsed_data) == 24
 
 
@@ -73,3 +80,6 @@ def test_bnsf_parser(client):
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
     # assert len(parsed_data) == 24
+=======
+    assert len(parsed_data) == 24
+>>>>>>> develop

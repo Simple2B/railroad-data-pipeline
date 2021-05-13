@@ -18,7 +18,9 @@ class KansasCitySouthernParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        file_url = scrapper("kansas_city_southern", self.week_no, self.year_no, self.URL)
+        file_url = scrapper(
+            "kansas_city_southern", self.week_no, self.year_no, self.URL
+        )
         file = urlopen(file_url)
         if file:
             self.file = file
@@ -52,9 +54,9 @@ class KansasCitySouthernParser(BaseParser):
 
         # get the date of report from the general text
         matches = datefinder.find_dates(format_text)
-        month = ''
-        day = ''
-        year = ''
+        month = ""
+        day = ""
+        year = ""
 
         for match in matches:
             month = match.month
