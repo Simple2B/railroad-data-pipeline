@@ -7,3 +7,7 @@ class BaseParser:
 
     def parse_data(self, file=None):
         raise NotImplementedError()
+
+
+def get_int_val(val: str) -> int:
+    return int(val.replace(",", ""))
