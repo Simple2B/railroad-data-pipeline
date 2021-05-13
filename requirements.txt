@@ -26,6 +26,7 @@ datefinder
 # camelot-py
 # camelot-py[cv]
 lxml
+pdfreader
 
 text-extractor
 requests
