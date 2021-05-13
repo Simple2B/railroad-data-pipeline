@@ -3,7 +3,7 @@ import pytest
 
 from app import db, create_app
 
-from app.controllers import CSXParser, UnionParser, KansasCitySouthernParser
+from app.controllers import CSXParser, KansasCitySouthernParser
 from app.models import Company
 
 
@@ -46,7 +46,7 @@ def test_csx_parser(client):
     assert parsed_data
     # assert len(parsed_data) == 25
 
-
+# UnionParser,
 # def test_union_parser(client):
 #     parser = UnionParser(2021, 2)
 #     with open(UNION_TEST_DATA_FILE, "rb") as file:
