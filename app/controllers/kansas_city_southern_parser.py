@@ -1,6 +1,6 @@
 import re
 import datefinder
-from sqlalchemy import _and
+from sqlalchemy import and_
 from datetime import datetime
 import PyPDF2
 from urllib.request import urlopen
@@ -48,7 +48,7 @@ class KansasCitySouthernParser(BaseParser):
             r"(?P<KCSR>[0-9\,]+)\s+"
             r"(?P<KCSM>[0-9\,]+)\s+"
             r"(?P<Consolidated>[0-9\,]+)\s+"
-            )
+        )
 
         # get the date of report from the general text
         matches = datefinder.find_dates(format_text)
@@ -71,15 +71,16 @@ class KansasCitySouthernParser(BaseParser):
 
         for line in re.finditer(PATERN, format_text):
             products[line["name"]] = dict(
-                    KCSR=get_int_val(line["KCSR"]),
-                    KCSM=get_int_val(line["KCSM"]),
-                    Consolidated=get_int_val(line["Consolidated"]),
+                KCSR=get_int_val(line["KCSR"]),
+                KCSM=get_int_val(line["KCSM"]),
+                Consolidated=get_int_val(line["Consolidated"]),
             )
 
         # write data to the database
         for prod_name in products:
             company_id = f"Kansas_City_Southern_{self.year_no}_{self.week_no}_XX"
-            company = Company.query.filter(_and(Company.company_id == company_id, Company.product_type == prod_name)).first()
+            company = Company.query.filter(and_(Company.company_id == company_id,
+                                           Company.product_type == prod_name)).first()
 
             if not company:
                 Company(
