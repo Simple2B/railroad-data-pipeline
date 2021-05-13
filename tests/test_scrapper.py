@@ -1,5 +1,5 @@
 import pytest
-from app.controllers import CSXParser, scrapper, UnionParser, KansasCitySouthernParser
+from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser
 from config import BaseConfig as conf
 
 
