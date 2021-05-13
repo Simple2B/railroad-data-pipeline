@@ -38,10 +38,6 @@ class UnionParser(BaseParser):
 
         matches = datefinder.find_dates(text_pdf)
 
-        month = ""
-        day = ""
-        year = ""
-
         COUNT_FIND_DATE = 2
         date = datetime.now()
         for i, match in enumerate(matches):

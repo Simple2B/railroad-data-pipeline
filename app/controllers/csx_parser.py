@@ -96,7 +96,7 @@ class CSXParser(BaseParser):
             )
 
         # write data to the database
-        for prod_name in products:
+        for prod_name, product in products.items():
             company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
             company = Company.query.filter(
                 and_(
@@ -106,11 +106,11 @@ class CSXParser(BaseParser):
             if not company:
                 Company(
                     company_id=company_id,
-                    carloads=products[prod_name]["week"]["current_year"],
-                    YOYCarloads=products[prod_name]["week"]["current_year"]
-                    - products[prod_name]["week"]["previous_year"],
-                    QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
-                    YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
+                    carloads=product["week"]["current_year"],
+                    YOYCarloads=product["week"]["current_year"]
+                    - product["week"]["previous_year"],
+                    QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
+                    YOYQTDCarloads=product["QUARTER_TO_DATE"][
                         "current_year"
                     ]
                     - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],

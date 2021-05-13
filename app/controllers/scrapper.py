@@ -47,3 +47,12 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                 return "https://www.up.com" + i['href']
         log(log.WARNING, "Links not found")
         return None
+    elif company == 'kansas_city_southern':
+        links = soup.find_all('a', class_='ext-link')
+        for i in links:
+            scrap_data = i.text.split()
+            scrap_week = scrap_data[1]
+            if str(week) == scrap_week:
+                return "https://investors.kcsouthern.com" + i['href']
+        log(log.WARNING, "Links not found")
+        return None
