@@ -46,5 +46,8 @@ def test_csx_parser(client):
 def test_union_parser(client):
     parser = UnionParser(2020, 15)
     with open(UNION_TEST_DATA_FILE, "rb") as file:
-        filePdf = parser.parse_data(file=file)
-        assert filePdf
+        parser.parse_data(file=file)
+    COMPANY_ID = "Union_Pacific_2020_15_XX"
+    parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    assert parsed_data
+    assert len(parsed_data) == 25

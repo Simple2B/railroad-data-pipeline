@@ -1,11 +1,13 @@
+import re
+from datetime import datetime
+import datefinder
 import requests
-# import copy
-from .base_parser import BaseParser
-import PyPDF2
-# import textract
-# import camelot
+from .base_parser import BaseParser, get_int_val
+from pdfreader import SimplePDFViewer
 from .scrapper import scrapper
 from app.logger import log
+from app.models import Company
+from sqlalchemy import and_
 
 
 class UnionParser(BaseParser):
@@ -29,23 +31,85 @@ class UnionParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
+        viewer = SimplePDFViewer(file)
+        text_pdf = ""
+        for canvas in viewer:
+            text_pdf += " ".join(canvas.strings)
 
-        # text = textract.process(file)
-        # text
+        matches = datefinder.find_dates(text_pdf)
 
-        pdfReader = PyPDF2.PdfFileReader(file)
-        pages = pdfReader.numPages
-        pages
+        month = ""
+        day = ""
+        year = ""
 
-        pg = pdfReader.getPage(0)
-        # copy_pdfPage = copy.deepcopy(pg)
-        # copy_pdfPage
-        textPdf = pg.extractText()
-        textPdf
+        COUNT_FIND_DATE = 2
+        date = datetime.now()
+        for i, match in enumerate(matches):
+            date = match
+            if i >= COUNT_FIND_DATE:
+                break
 
-        # df_list = []
-        # results = camelot.read_pdf(file)
-        # results
-        # for table in results:
-        #     t = table.parsing_report
-        #     df_list.append(results[0].df)
+        last_skip_word = "% Chg"
+        skip_index = text_pdf.rindex(last_skip_word) + len(last_skip_word)
+        text_pdf = text_pdf[skip_index:].strip()
+        PATTERN = (
+            r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
+            r"(?P<w_current_year>[0-9\,]+)\s+"
+            r"(?P<w_previous_year>[0-9\,]+)\s+"
+            r"(?P<w_chg>[0-9\.\%\-\(\)]+)\s+"
+            r"(?P<q_current_year>[0-9\,]+)\s+"
+            r"(?P<q_previous_year>[0-9\,]+)\s+"
+            r"(?P<q_chg>[0-9\.\%\-\(\)]+)\s+"
+            r"(?P<y_current_year>[0-9\,]+)\s+"
+            r"(?P<y_previous_year>[0-9\,]+)\s+"
+            r"(?P<y_chg>[0-9\.\%\-\(\)]+)"
+        )
+
+        # list of all products
+        products = {}
+        for line in re.finditer(PATTERN, text_pdf):
+            products[line["name"].strip()] = dict(
+                week=dict(
+                    current_year=get_int_val(line["w_current_year"]),
+                    previous_year=get_int_val(line["w_previous_year"]),
+                    chg=line["w_chg"],
+                ),
+                QUARTER_TO_DATE=dict(
+                    current_year=get_int_val(line["q_current_year"]),
+                    previous_year=get_int_val(line["q_previous_year"]),
+                    chg=line["q_chg"],
+                ),
+                YEAR_TO_DATE=dict(
+                    current_year=get_int_val(line["y_current_year"]),
+                    previous_year=get_int_val(line["y_previous_year"]),
+                    chg=line["y_chg"],
+                ),
+            )
+
+        for prod_name in products:
+            company_id = f"Union_Pacific_{self.year_no}_{self.week_no}_XX"
+            company = Company.query.filter(
+                and_(
+                    Company.company_id == company_id, Company.product_type == prod_name
+                )
+            ).first()
+            if not company:
+                Company(
+                    company_id=company_id,
+                    carloads=products[prod_name]["week"]["current_year"],
+                    YOYCarloads=products[prod_name]["week"]["current_year"]
+                    - products[prod_name]["week"]["previous_year"],
+                    QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
+                    YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
+                        "current_year"
+                    ]
+                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
+                    date=date,
+                    week=self.week_no,
+                    year=self.year_no,
+                    company_name="CSX",
+                    product_type=prod_name,
+                ).save()
