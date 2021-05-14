@@ -3,8 +3,8 @@ import datefinder
 import requests
 # from sqlalchemy import and_
 # from datetime import datetime
-from io import BytesIO
-from pdfreader import SimplePDFViewer, PDFDocument
+# from io import BytesIO
+from pdfreader import SimplePDFViewer
 # from urllib.request import urlopen
 from .scrapper import scrapper
 from .base_parser import BaseParser
@@ -47,7 +47,7 @@ class BNSFParser(BaseParser):
             text_pdf += " ".join(canvas.strings)
 
         matches = datefinder.find_dates(text_pdf)
-
+        matches
         # COUNT_FIND_DATE = 2
         # date = datetime.now()
         # for i, match in enumerate(matches):
