@@ -1,8 +1,11 @@
-import re
-# import datefinder
+# import re
+import datefinder
+import requests
+# from sqlalchemy import and_
 # from datetime import datetime
-import PyPDF2
-from urllib.request import urlopen
+from io import BytesIO
+from pdfreader import SimplePDFViewer, PDFDocument
+# from urllib.request import urlopen
 from .scrapper import scrapper
 from .base_parser import BaseParser
 from app.logger import log
@@ -17,10 +20,12 @@ class BNSFParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        file_url = scrapper("bnsf", self.week_no, self.year_no, self.URL)
-        file = urlopen(file_url)
+        file_url = scrapper('bnsf', self.week_no, self.year_no, self.URL)
+        requests.packages.urllib3.disable_warnings()
+        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+        file = requests.get(file_url, stream=True)
         if file:
-            self.file = file
+            self.file = file.content
             return True
         log(log.ERROR, "File not found")
         return False
@@ -29,54 +34,47 @@ class BNSFParser(BaseParser):
         if not file:
             file = self.file
 
-        pdf_text = ""
-        # reads each of the pdf pages
-        pdf_reader = PyPDF2.PdfFileReader(file)
-        for page_number in range(pdf_reader.numPages):
-            page = pdf_reader.getPage(page_number)
-            pdf_text += page.extractText()
+        # stream = BytesIO(file.read())
+        # doc = PDFDocument(stream)
+        # doc
 
-        # remove spaces from the text that we read from the pdf file
-        format_text = re.sub("\n", " ", pdf_text)
+        viewer = SimplePDFViewer(file)
+        text_pdf = ""
 
-        # the text of which we have a string we make an array of values from it
-        # text_elem = format_text.split()[12:]
-        format_text = " ".join(format_text.split()[12:])
-        # PATERN = (
+        for canvas in viewer:
+            # page_text = canvas.text_content
+            # page_text
+            text_pdf += " ".join(canvas.strings)
+
+        matches = datefinder.find_dates(text_pdf)
+
+        # COUNT_FIND_DATE = 2
+        # date = datetime.now()
+        # for i, match in enumerate(matches):
+        #     date = match
+        #     if i >= COUNT_FIND_DATE:
+        #         break
+
+        # last_skip_word = "% Chg"
+        # skip_index = text_pdf.rindex(last_skip_word) + len(last_skip_word)
+        # text_pdf = text_pdf[skip_index:].strip()
+        # PATTERN = (
         #     r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
         #     r"(?P<w_current_year>[0-9\,]+)\s+"
         #     r"(?P<w_previous_year>[0-9\,]+)\s+"
-        #     r"(?P<w_chg>[0-9\.\%\-]+)\s+"
+        #     r"(?P<w_chg>[0-9\.\%\-\(\)]+)\s+"
         #     r"(?P<q_current_year>[0-9\,]+)\s+"
         #     r"(?P<q_previous_year>[0-9\,]+)\s+"
-        #     r"(?P<q_chg>[0-9\.\%\-]+)\s+"
+        #     r"(?P<q_chg>[0-9\.\%\-\(\)]+)\s+"
         #     r"(?P<y_current_year>[0-9\,]+)\s+"
         #     r"(?P<y_previous_year>[0-9\,]+)\s+"
-        #     r"(?P<y_chg>[0-9\.\%\-]+)"
+        #     r"(?P<y_chg>[0-9\.\%\-\(\)]+)"
         # )
 
-        # get the date of report from the general text
-        # matches = datefinder.find_dates(format_text)
-
-        # month = ""
-        # day = ""
-        # year = ""
-
-        # for match in matches:
-        #     month = match.month
-        #     day = match.day
-        #     year = match.year
-
-        # date = datetime(month=month, day=day, year=year)
-
-        # list of all products
+        # # list of all products
         # products = {}
-
-        # def get_int_val(val: str) -> int:
-        #     return int(val.replace(",", ""))
-
-        # for line in re.finditer(PATERN, format_text):
-        #     products[line["name"]] = dict(
+        # for line in re.finditer(PATTERN, text_pdf):
+        #     products[line["name"].strip()] = dict(
         #         week=dict(
         #             current_year=get_int_val(line["w_current_year"]),
         #             previous_year=get_int_val(line["w_previous_year"]),
@@ -94,24 +92,27 @@ class BNSFParser(BaseParser):
         #         ),
         #     )
 
-        # write data to the database
-        # for prod_name, product in products.items():
-        #     company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
-        #     company = Company.query.filter(Company.company_id == company_id).first()
+        # for prod_name in products:
+        #     company_id = f"BNSF_{self.year_no}_{self.week_no}_XX"
+        #     company = Company.query.filter(
+        #         and_(
+        #             Company.company_id == company_id, Company.product_type == prod_name
+        #         )
+        #     ).first()
         #     if not company:
         #         Company(
         #             company_id=company_id,
-        #             carloads=product["week"]["current_year"],
-        #             YOYCarloads=product["week"]["current_year"]
-        #             - product["week"]["previous_year"],
-        #             QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-        #             YOYQTDCarloads=product["QUARTER_TO_DATE"][
+        #             carloads=products[prod_name]["week"]["current_year"],
+        #             YOYCarloads=products[prod_name]["week"]["current_year"]
+        #             - products[prod_name]["week"]["previous_year"],
+        #             QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
+        #             YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
         #                 "current_year"
         #             ]
-        #             - product["QUARTER_TO_DATE"]["previous_year"],
-        #             YTDCarloads=product["YEAR_TO_DATE"]["current_year"],
-        #             YOYYDCarloads=product["YEAR_TO_DATE"]["current_year"]
-        #             - product["YEAR_TO_DATE"]["previous_year"],
+        #             - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+        #             YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+        #             YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+        #             - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
         #             date=date,
         #             week=self.week_no,
         #             year=self.year_no,
