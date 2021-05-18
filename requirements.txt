@@ -13,6 +13,7 @@ WTForms
 PyPDF2
 datefinder
 pandas
+xlrd
 # pdfminer.six
 # textract
 
