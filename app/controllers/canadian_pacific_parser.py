@@ -114,7 +114,7 @@ class CanadianPacificParser(BaseParser):
         date_db = datetime(month=format_month, day=format_day, year=format_year)
 
         # write data to the database
-        del products_keys[0]
+        del products[products_keys[0]]
         for prod_name, product in products.items():
             company_id = f"Canadian_Pacific_{self.year_no}_{self.week_no}_XX"
             company = Company.query.filter(
