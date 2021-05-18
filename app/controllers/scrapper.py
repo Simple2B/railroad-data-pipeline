@@ -56,7 +56,7 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                 return "https://investors.kcsouthern.com" + i['href']
         log(log.WARNING, "Links not found")
         return None
-    elif company == 'canadian_national':
+    elif company == "canadian_national":
         years_of_reports = soup.find_all('select', id="select1")
         for year in years_of_reports:
             if year:
@@ -66,5 +66,14 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                     scrap_week = scrap_data[1]
                     if str(week) == scrap_week:
                         return "https://www.cn.ca" + i['value']
+        log(log.WARNING, "Links not found")
+        return None
+    elif company == "canadian_pacific":
+        links = soup.find_all("a", class_="button-link button-middle")
+        for i in links:
+            scrap_data = i.text.split()
+            scrap_week = scrap_data[1]
+            if str(week) == scrap_week:
+                return "https://investor.cpr.ca" + i['href']
         log(log.WARNING, "Links not found")
         return None

@@ -23,6 +23,8 @@ def test_scrapper():
     assert scrap
     scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
     assert scrap
+    scrap = scrapper("canadian_pacific", 2, 2021, "https://investor.cpr.ca/key-metrics/default.aspx")
+    assert scrap
 
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
