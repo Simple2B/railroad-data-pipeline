@@ -1,5 +1,5 @@
 import pytest
-from app.controllers import CSXParser, scrapper, UnionParser, KansasCitySouthernParser
+from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
 from config import BaseConfig as conf
 
 
@@ -21,7 +21,7 @@ def test_scrapper():
         "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en",
     )
     assert scrap
-    scrap = scrapper("", 2, 2021, "")
+    scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
     assert scrap
 
 
@@ -50,3 +50,12 @@ def test_kansas_city_southern_scraper():
     assert kansas_city_southern.file is None
     assert kansas_city_southern.get_file()
     assert kansas_city_southern.file
+
+
+@pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
+def test_canadian_national_scraper():
+    canadian_national = CanadianNationalParser(2021, 1)
+    assert canadian_national
+    assert canadian_national.file is None
+    assert canadian_national.get_file()
+    assert canadian_national.file

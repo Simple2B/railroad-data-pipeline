@@ -81,11 +81,8 @@ class KansasCitySouthernParser(BaseParser):
         # write data to the database
         for prod_name in products:
             company_id = f"Kansas_City_Southern_{self.year_no}_{self.week_no}_XX"
-            company = Company.query.filter(
-                and_(
-                    Company.company_id == company_id, Company.product_type == prod_name
-                )
-            ).first()
+            company = Company.query.filter(and_(Company.company_id == company_id,
+                                           Company.product_type == prod_name)).first()
 
             if not company:
                 Company(
