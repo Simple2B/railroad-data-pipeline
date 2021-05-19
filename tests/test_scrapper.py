@@ -1,5 +1,5 @@
 import pytest
-from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
+from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, BNSFParser
 from config import BaseConfig as conf
 
 
@@ -14,13 +14,11 @@ def test_scrapper():
         "https://www.up.com/investor/aar-stb_reports/2021_Carloads/index.htm",
     )
     assert scrap
-    scrap = scrapper(
-        "kansas_city_southern",
-        2,
-        2021,
-        "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en",
-    )
+    scrap = scrapper("kansas_city_southern", 2, 2021,
+                     "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en")
     assert scrap
+    scrap = scrapper(
+        "bnsf", 2, 2021, "http://www.bnsf.com/about-bnsf/financial-information/index.html#Weekly+Carload+Reports")
     scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
     assert scrap
 
@@ -53,9 +51,9 @@ def test_kansas_city_southern_scraper():
 
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
-def test_canadian_national_scraper():
-    canadian_national = CanadianNationalParser(2021, 1)
-    assert canadian_national
-    assert canadian_national.file is None
-    assert canadian_national.get_file()
-    assert canadian_national.file
+def test_bnsf_scraper():
+    bnsf = BNSFParser(2021, 1)
+    assert bnsf
+    assert bnsf.file is None
+    assert bnsf.get_file()
+    assert bnsf.file
