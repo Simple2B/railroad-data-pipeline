@@ -5,3 +5,4 @@ from .base_parser import BaseParser
 from .union_parser import UnionParser
 from .kansas_city_southern_parser import KansasCitySouthernParser
 from .bnsf_parser import BNSFParser
+from .canadian_national_parser  import CanadianNationalParser

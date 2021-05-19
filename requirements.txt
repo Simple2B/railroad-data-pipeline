@@ -12,12 +12,13 @@ WTForms
 
 PyPDF2
 datefinder
+pandas
+xlrd==1.2.0
 # pdfminer.six
 # textract
 
 # tika
 # more-itertools
-
 # pdfplumber
 # tabula
 # tabulate

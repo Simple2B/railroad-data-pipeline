@@ -43,6 +43,7 @@ class CSXParser(BaseParser):
         # the text of which we have a string we make an array of values from it
         # text_elem = format_text.split()[12:]
         format_text = " ".join(format_text.split()[12:])
+
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
             r"(?P<w_current_year>[0-9\,]+)\s+"
