@@ -1,5 +1,6 @@
 import pytest
 from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, BNSFParser
+from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
 from config import BaseConfig as conf
 
 
@@ -19,6 +20,7 @@ def test_scrapper():
     assert scrap
     scrap = scrapper(
         "bnsf", 2, 2021, "http://www.bnsf.com/about-bnsf/financial-information/index.html#Weekly+Carload+Reports")
+    scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
     assert scrap
 
 
@@ -56,3 +58,9 @@ def test_bnsf_scraper():
     assert bnsf.file is None
     assert bnsf.get_file()
     assert bnsf.file
+def test_canadian_national_scraper():
+    canadian_national = CanadianNationalParser(2021, 1)
+    assert canadian_national
+    assert canadian_national.file is None
+    assert canadian_national.get_file()
+    assert canadian_national.file
