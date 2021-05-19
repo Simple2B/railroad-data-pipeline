@@ -1,6 +1,6 @@
 import pytest
 from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, BNSFParser
-from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
+from app.controllers import CanadianNationalParser
 from config import BaseConfig as conf
 
 
@@ -58,6 +58,8 @@ def test_bnsf_scraper():
     assert bnsf.file is None
     assert bnsf.get_file()
     assert bnsf.file
+
+
 def test_canadian_national_scraper():
     canadian_national = CanadianNationalParser(2021, 1)
     assert canadian_national
