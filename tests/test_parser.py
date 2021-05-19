@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/2020-Week-1-AAR.pdf')
 UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/pdf_unp_week_16_carloads.pdf')
 KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/week-17-05-01-2021-aar-carloads.pdf')
-BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/20210508.pdf')
+BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, 'data/20210501.pdf')
 
 
 @pytest.fixture
@@ -72,4 +72,5 @@ def test_bnsf_parser(client):
     COMPANY_ID = "BNSF_2021_2_XX"
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
-    # assert len(parsed_data) == 24
+
+    assert len(parsed_data) == 25
