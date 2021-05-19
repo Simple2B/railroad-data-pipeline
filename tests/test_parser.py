@@ -4,7 +4,7 @@ import pytest
 from app import db, create_app
 
 from app.controllers import CSXParser, UnionParser, KansasCitySouthernParser, BNSFParser
-from app.controllers import CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
+from app.controllers import CanadianNationalParser
 from app.models import Company
 
 
