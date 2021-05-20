@@ -9,6 +9,7 @@ python-dotenv
 SQLAlchemy
 Werkzeug
 WTForms
+bs4
 
 PyPDF2
 datefinder
@@ -33,7 +34,7 @@ text-extractor
 requests
 beautifulsoup4
 selenium
-
+ 
 flake8
 black
 pytest

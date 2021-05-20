@@ -1,5 +1,6 @@
 import pytest
 from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
+from app.controllers import NorfolkSouthernParser
 from config import BaseConfig as conf
 
 
@@ -22,6 +23,9 @@ def test_scrapper():
     )
     assert scrap
     scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
+    assert scrap
+    scrap = scrapper("norfolk_southern", 2, 2020,
+                     "http://www.nscorp.com/content/nscorp/en/investor-relations/performance-metrics.html")
     assert scrap
 
 
@@ -59,3 +63,12 @@ def test_canadian_national_scraper():
     assert canadian_national.file is None
     assert canadian_national.get_file()
     assert canadian_national.file
+
+
+@pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
+def test_norfolk_southern_scraper():
+    norfolk_southern = NorfolkSouthernParser(2020, 2)
+    assert norfolk_southern
+    assert norfolk_southern.file is None
+    assert norfolk_southern.get_file()
+    assert norfolk_southern.file
