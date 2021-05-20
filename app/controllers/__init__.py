@@ -4,4 +4,6 @@ from .csx_parser import CSXParser
 from .base_parser import BaseParser
 from .union_parser import UnionParser
 from .kansas_city_southern_parser import KansasCitySouthernParser
+from .canadian_national_parser  import CanadianNationalParser
+from .norfolk_southern_parser import NorfolkSouthernParser
 from .bnsf_parser import BNSFParser
