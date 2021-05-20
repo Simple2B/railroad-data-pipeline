@@ -68,15 +68,3 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                         return "https://www.cn.ca" + i['value']
         log(log.WARNING, "Links not found")
         return None
-    elif company == 'norfolk_southern':
-        links = soup.find_all('a')
-    elif company == 'bnsf':
-        links = soup.find_all('a', class_='local-link')
-        for i in links:
-            scrap_data = i.text.split()
-            scrap_week = scrap_data[1]
-            if str(week) == scrap_week:
-                return "http://www.nscorp.com" + i['href']
-        log(log.WARNING, "Links not found")
-        return None
-#                 return "https://investors.kcsouthern.com" + i['href']
