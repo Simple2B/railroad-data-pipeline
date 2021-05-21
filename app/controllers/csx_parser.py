@@ -5,6 +5,7 @@ import PyPDF2
 from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
+from .carload_types import carload_types
 from .base_parser import BaseParser
 from app.logger import log
 from app.models import Company
@@ -98,6 +99,9 @@ class CSXParser(BaseParser):
 
         # write data to the database
         for prod_name, product in products.items():
+            for carload in carload_types:
+                carload
+
             company_id = f"CSX_{self.year_no}_{self.week_no}_XX"
             company = Company.query.filter(
                 and_(

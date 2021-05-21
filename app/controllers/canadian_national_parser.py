@@ -70,7 +70,6 @@ class CanadianNationalParser(BaseParser):
         format_year = int(re.findall(r"(\d+)", year)[0])
 
         format_date = datetime(month=format_month, day=format_day, year=format_year)
-
         xlsx_dicts_types = xlsx_dicts.pop(1)
 
         # by type of carload value

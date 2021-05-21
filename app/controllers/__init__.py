@@ -1,5 +1,6 @@
 # flake8: noqa F401
 from .scrapper import scrapper
+from .carload_types import carload_types
 from .csx_parser import CSXParser
 from .base_parser import BaseParser
 from .union_parser import UnionParser
