@@ -52,7 +52,7 @@ def test_union_parser(client):
     COMPANY_ID = "Union_Pacific_2021_2_XX"
     parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     assert parsed_data
-    # assert len(parsed_data) == 25
+    assert len(parsed_data) == 25
 
 
 def test_kansas_city_southern_parser(client):
