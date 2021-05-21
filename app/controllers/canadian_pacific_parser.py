@@ -54,8 +54,6 @@ class CanadianPacificParser(BaseParser):
         del data_dicts['nan']
         del data_dicts['Revenue Ton Miles (in millions)']
 
-        data_dicts
-
         # list of all products
         products = {}
 

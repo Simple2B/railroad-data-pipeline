@@ -4,7 +4,6 @@ import requests
 import pandas as pd
 from sqlalchemy import and_
 from .base_parser import BaseParser
-# from pdfreader import SimplePDFViewer
 from .scrapper import scrapper
 from app.logger import log
 from app.models import Company
@@ -36,6 +35,7 @@ class CanadianNationalParser(BaseParser):
         file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
         xlsx_dicts = read_xlsx.to_dict(orient='dictionary_xlsx')
+
         # xlsx_dicts = read_xlsx.to_dict('dictionary_xlsx')
         del xlsx_dicts[0]
 
@@ -75,7 +75,6 @@ class CanadianNationalParser(BaseParser):
 
         # by type of carload value
         data_dicts = {}
-
         for j in xlsx_dicts_types:
             values_dict = []
             for index in xlsx_dicts:
@@ -106,7 +105,6 @@ class CanadianNationalParser(BaseParser):
                         chg=round(data_dicts[data][13]*100, 1),
                     ),
                 )
-        products
         # write data to the database
         for prod_name, product in products.items():
             company_id = f"Canadian_National_{self.year_no}_{self.week_no}_XX"

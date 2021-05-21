@@ -46,8 +46,6 @@ class NorfolkSouthernParser(BaseParser):
             format_text = format_text.split()
             all_text.append(format_text)
 
-        all_text
-
         format_all_text_date = []
         format_all_text = []
 
