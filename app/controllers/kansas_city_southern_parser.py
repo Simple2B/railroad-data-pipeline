@@ -93,7 +93,7 @@ class KansasCitySouthernParser(BaseParser):
                 )
             ).first()
 
-            if not company:
+            if not company and carload_id is not None:
                 Company(
                     company_id=company_id,
                     carloads=products[prod_name]["Consolidated"],

@@ -92,7 +92,7 @@ class UnionParser(BaseParser):
                     Company.company_id == company_id, Company.product_type == prod_name
                 )
             ).first()
-            if not company:
+            if not company and carload_id is not None:
                 Company(
                     company_id=company_id,
                     carloads=products[prod_name]["week"]["current_year"],

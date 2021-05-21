@@ -116,7 +116,7 @@ class CanadianNationalParser(BaseParser):
                 )
             ).first()
 
-            if not company:
+            if not company and carload_id is not None:
                 Company(
                     company_id=company_id,
                     carloads=product["week"]["current_year"],
