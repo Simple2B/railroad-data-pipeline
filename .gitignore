@@ -8,3 +8,6 @@ env/
 .env
 *.pyc
 /*.sqlite3*
+
+# project log
+railroad_data_pipeline.log

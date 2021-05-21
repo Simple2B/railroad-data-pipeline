@@ -2,6 +2,7 @@
 import click
 
 from app import create_app, db, models
+from app.logger import log
 
 app = create_app()
 
@@ -32,6 +33,13 @@ def reset_db():
     """Reset the current database."""
     db.drop_all()
     db.create_all()
+
+
+@app.cli.command()
+def scrap():
+    """Scrapping all companies"""
+    log(log.INFO, "Scrapper started")
+    pass
 
 
 if __name__ == "__main__":

@@ -1,12 +1,11 @@
 import logging
 import sys
 
-LOGGER_NAME = "SimpleAppLog"
+LOGGER_NAME = "railroad_data_pipeline"
 
 
 class Logger(object):
     # __created_std_out = False
-    log_file = bytes
     EXCEPTION = 100
     CRITICAL = 50
     ERROR = 40
@@ -20,6 +19,11 @@ class Logger(object):
         # create formatter
         formatter = logging.Formatter("%(asctime)-15s [%(levelname)-8s] %(message)s")
         ch = logging.StreamHandler(sys.stderr)
+        ch.setLevel(logging.INFO)
+        ch.setFormatter(formatter)
+        self.__log.addHandler(ch)
+        log_file = open(f"{LOGGER_NAME}.log", "w")
+        ch = logging.StreamHandler(log_file)
         ch.setLevel(logging.DEBUG)
         ch.setFormatter(formatter)
         self.__log.addHandler(ch)
