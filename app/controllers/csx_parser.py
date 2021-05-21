@@ -101,7 +101,7 @@ class CSXParser(BaseParser):
         for prod_name, product in products.items():
             company_id = ""
             for carload in CARLOAD_TYPES:
-                if prod_name == carload['type']:
+                if prod_name.lower() == carload['type'].lower():
                     company_id = f"CSX_{self.year_no}_{self.week_no}_{carload['ID']}"
 
                     company = Company.query.filter(

@@ -6,6 +6,7 @@ from datetime import datetime
 import PyPDF2
 from .scrapper import scrapper
 from .base_parser import BaseParser
+from .carload_types import CARLOAD_TYPES
 from app.logger import log
 from app.models import Company
 
@@ -111,33 +112,34 @@ class BNSFParser(BaseParser):
                 ),
             )
 
-        products
-
         # write data to the database
         for prod_name, product in products.items():
-            company_id = f"BNSF_{self.year_no}_{self.week_no}_XX"
-            company = Company.query.filter(
-                and_(
-                    Company.company_id == company_id, Company.product_type == prod_name
-                )
-            ).first()
-            if not company:
-                Company(
-                    company_id=company_id,
-                    carloads=product["week"]["current_year"],
-                    YOYCarloads=product["week"]["current_year"]
-                    - product["week"]["previous_year"],
-                    QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-                    YOYQTDCarloads=product["QUARTER_TO_DATE"][
-                        "current_year"
-                    ]
-                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=date,
-                    week=self.week_no,
-                    year=self.year_no,
-                    company_name="BNSF",
-                    product_type=prod_name,
-                ).save()
+            company_id = ""
+            for carload in CARLOAD_TYPES:
+                if prod_name.lower() == carload['type'].lower():
+                    company_id = f"BNSF_{self.year_no}_{self.week_no}_{carload['ID']}"
+                    company = Company.query.filter(
+                        and_(
+                            Company.company_id == company_id, Company.product_type == prod_name
+                        )
+                    ).first()
+                    if not company:
+                        Company(
+                            company_id=company_id,
+                            carloads=product["week"]["current_year"],
+                            YOYCarloads=product["week"]["current_year"]
+                            - product["week"]["previous_year"],
+                            QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
+                            YOYQTDCarloads=product["QUARTER_TO_DATE"][
+                                "current_year"
+                            ]
+                            - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+                            YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+                            YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+                            - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
+                            date=date,
+                            week=self.week_no,
+                            year=self.year_no,
+                            company_name="BNSF",
+                            product_type=prod_name,
+                        ).save()

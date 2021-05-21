@@ -5,6 +5,7 @@ from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
 from .base_parser import BaseParser
+from .carload_types import CARLOAD_TYPES
 from app.logger import log
 from app.models import Company
 
@@ -51,14 +52,14 @@ class NorfolkSouthernParser(BaseParser):
 
         for text in all_text:
             for key in text:
-                world_index = text.index('All')
-                if key == 'All':
+                world_index = text.index("All")
+                if key == "All":
                     format_text_date = " ".join(text[:world_index])
                     format_all_text_date.append(format_text_date)
                     format_text = " ".join(text[world_index:])
                     format_text = format_text.replace("(", " ").replace(")", " ")
-                    format_text = re.sub(r'\s+', ' ', format_text)
-                    format_text = re.sub(r'(\-)\s+(\d)', r'\1\2', format_text)
+                    format_text = re.sub(r"\s+", " ", format_text)
+                    format_text = re.sub(r"(\-)\s+(\d)", r"\1\2", format_text)
                     format_all_text.append(format_text)
 
         format_all_date = []
@@ -66,7 +67,7 @@ class NorfolkSouthernParser(BaseParser):
         for text_date in format_all_text_date:
             text_date = text_date.replace("-", " ")
             text_date = re.sub("\n", " ", text_date)
-            text_date = re.sub(r'\s+', ' ', text_date)
+            text_date = re.sub(r"\s+", " ", text_date)
             text_date
             format_all_date.append(text_date)
 
@@ -140,39 +141,56 @@ class NorfolkSouthernParser(BaseParser):
                                 month_num=date["month_num"],
                                 day_num=date["day_num"],
                                 year_num=date["year_num"],
-                            )
+                            ),
                         )
                 all_pages_products.append(products)
 
-        # write data to the database
-        # for prod in all_pages_products:
+            # write data to the database
+            # for prod in all_pages_products:
             for prod in all_pages_products:
                 for prod_name, product in prod.items():
-                    company_id = f"Norfolk_Southern_{product['date']['year_num']}_{product['date']['week_num']}_XX"
-                    date = datetime(month=int(product['date']['month_num']), day=int(product['date']
-                                    ['day_num']), year=int(product['date']['year_num']))
-                    company = Company.query.filter(
-                        and_(
-                            Company.company_id == company_id, Company.product_type == prod_name
-                        )
-                    ).first()
-                    if not company:
-                        Company(
-                            company_id=company_id,
-                            carloads=product["week"]["current_year"],
-                            YOYCarloads=product["week"]["current_year"]
-                            - product["week"]["previous_year"],
-                            QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-                            YOYQTDCarloads=product["QUARTER_TO_DATE"][
-                                "current_year"
-                            ]
-                            - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                            YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                            YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                            - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                            date=date,
-                            week=int(product['date']['week_num']),
-                            year=int(product['date']['year_num']),
-                            company_name="Nortfolk Southern",
-                            product_type=prod_name,
-                        ).save()
+                    company_id = ""
+                    for carload in CARLOAD_TYPES:
+                        if prod_name.lower() == carload["type"].lower():
+                            company_id = f"Norfolk_Southern_{product['date']['year_num']}_{product['date']['week_num']}_{carload['ID']}"
+                            date = datetime(
+                                month=int(product["date"]["month_num"]),
+                                day=int(product["date"]["day_num"]),
+                                year=int(product["date"]["year_num"]),
+                            )
+                            company = Company.query.filter(
+                                and_(
+                                    Company.company_id == company_id,
+                                    Company.product_type == prod_name,
+                                )
+                            ).first()
+                            if not company:
+                                Company(
+                                    company_id=company_id,
+                                    carloads=product["week"]["current_year"],
+                                    YOYCarloads=product["week"]["current_year"]
+                                    - product["week"]["previous_year"],
+                                    QTDCarloads=product["QUARTER_TO_DATE"][
+                                        "current_year"
+                                    ],
+                                    YOYQTDCarloads=product["QUARTER_TO_DATE"][
+                                        "current_year"
+                                    ]
+                                    - products[prod_name]["QUARTER_TO_DATE"][
+                                        "previous_year"
+                                    ],
+                                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"][
+                                        "current_year"
+                                    ],
+                                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"][
+                                        "current_year"
+                                    ]
+                                    - products[prod_name]["YEAR_TO_DATE"][
+                                        "previous_year"
+                                    ],
+                                    date=date,
+                                    week=int(product["date"]["week_num"]),
+                                    year=int(product["date"]["year_num"]),
+                                    company_name="Nortfolk Southern",
+                                    product_type=prod_name,
+                                ).save()
