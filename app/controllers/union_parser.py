@@ -5,7 +5,7 @@ import requests
 from .base_parser import BaseParser, get_int_val
 from pdfreader import SimplePDFViewer
 from .scrapper import scrapper
-from .carload_types import CARLOAD_TYPES
+from .carload_types import find_carload_id
 from app.logger import log
 from app.models import Company
 from sqlalchemy import and_
@@ -85,31 +85,30 @@ class UnionParser(BaseParser):
 
         for prod_name in products:
             company_id = ""
-            for carload in CARLOAD_TYPES:
-                if prod_name.lower() == carload["type"].lower():
-                    company_id = f"Union_Pacific_{self.year_no}_{self.week_no}_{carload['ID']}"
-                    company = Company.query.filter(
-                        and_(
-                            Company.company_id == company_id, Company.product_type == prod_name
-                        )
-                    ).first()
-                    if not company:
-                        Company(
-                            company_id=company_id,
-                            carloads=products[prod_name]["week"]["current_year"],
-                            YOYCarloads=products[prod_name]["week"]["current_year"]
-                            - products[prod_name]["week"]["previous_year"],
-                            QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
-                            YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
-                                "current_year"
-                            ]
-                            - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                            YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                            YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                            - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                            date=date,
-                            week=self.week_no,
-                            year=self.year_no,
-                            company_name="UNION",
-                            product_type=prod_name,
-                        ).save()
+            carload_id = find_carload_id(prod_name)
+            company_id = f"Union_Pacific_{self.year_no}_{self.week_no}_{carload_id}"
+            company = Company.query.filter(
+                and_(
+                    Company.company_id == company_id, Company.product_type == prod_name
+                )
+            ).first()
+            if not company:
+                Company(
+                    company_id=company_id,
+                    carloads=products[prod_name]["week"]["current_year"],
+                    YOYCarloads=products[prod_name]["week"]["current_year"]
+                    - products[prod_name]["week"]["previous_year"],
+                    QTDCarloads=products[prod_name]["QUARTER_TO_DATE"]["current_year"],
+                    YOYQTDCarloads=products[prod_name]["QUARTER_TO_DATE"][
+                        "current_year"
+                    ]
+                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
+                    date=date,
+                    week=self.week_no,
+                    year=self.year_no,
+                    company_name="UNION",
+                    product_type=prod_name,
+                ).save()

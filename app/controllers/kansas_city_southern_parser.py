@@ -5,7 +5,7 @@ from datetime import datetime
 import PyPDF2
 from urllib.request import urlopen
 from .scrapper import scrapper
-from .carload_types import CARLOAD_TYPES
+from .carload_types import find_carload_id
 from .base_parser import BaseParser
 from app.logger import log
 from app.models import Company
@@ -82,30 +82,29 @@ class KansasCitySouthernParser(BaseParser):
         # write data to the database
         for prod_name in products:
             company_id = ""
-            for carload in CARLOAD_TYPES:
-                if prod_name.lower() == carload["type"].lower():
-                    company_id = (
-                        f"Kansas_City_Southern_{self.year_no}_{self.week_no}_{carload['ID']}"
-                    )
-                    company = Company.query.filter(
-                        and_(
-                            Company.company_id == company_id,
-                            Company.product_type == prod_name,
-                        )
-                    ).first()
+            carload_id = find_carload_id(prod_name)
+            company_id = (
+                f"Kansas_City_Southern_{self.year_no}_{self.week_no}_{carload_id}"
+            )
+            company = Company.query.filter(
+                and_(
+                    Company.company_id == company_id,
+                    Company.product_type == prod_name,
+                )
+            ).first()
 
-                    if not company:
-                        Company(
-                            company_id=company_id,
-                            carloads=products[prod_name]["Consolidated"],
-                            YOYCarloads=None,
-                            QTDCarloads=None,
-                            YOYQTDCarloads=None,
-                            YTDCarloads=None,
-                            YOYYDCarloads=None,
-                            date=date,
-                            week=self.week_no,
-                            year=self.year_no,
-                            company_name="Kansas City Southern",
-                            product_type=prod_name,
-                        ).save()
+            if not company:
+                Company(
+                    company_id=company_id,
+                    carloads=products[prod_name]["Consolidated"],
+                    YOYCarloads=None,
+                    QTDCarloads=None,
+                    YOYQTDCarloads=None,
+                    YTDCarloads=None,
+                    YOYYDCarloads=None,
+                    date=date,
+                    week=self.week_no,
+                    year=self.year_no,
+                    company_name="Kansas City Southern",
+                    product_type=prod_name,
+                ).save()

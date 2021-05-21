@@ -22,3 +22,9 @@ CARLOAD_TYPES = (
     {'ID': 21, 'type': "Trailer"},
     {'ID': 22, 'type': "Waste and Scrap Materials"},
 )
+
+
+def find_carload_id(prod_name):
+    for carload in CARLOAD_TYPES:
+        if prod_name.lower() == carload['type'].lower():
+            return carload['ID']
