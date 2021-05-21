@@ -5,6 +5,7 @@
     "python.formatting.provider": "black",
     "python.terminal.activateEnvironment": true,
     "cSpell.words": [
+        "BNSF",
         "rindex"
     ],
     "files.watcherExclude": {
