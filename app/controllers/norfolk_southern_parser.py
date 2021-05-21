@@ -151,7 +151,9 @@ class NorfolkSouthernParser(BaseParser):
                 for prod_name, product in prod.items():
                     company_id = ""
                     carload_id = find_carload_id(prod_name)
-                    company_id = f"Norfolk_Southern_{product['date']['year_num']}_{product['date']['week_num']}_{carload_id}"
+                    prod_year = product['date']['year_num']
+                    prod_week = product['date']['week_num']
+                    company_id = f"Norfolk_Southern_{prod_year}_{prod_week}_{carload_id}"
                     date = datetime(
                         month=int(product["date"]["month_num"]),
                         day=int(product["date"]["day_num"]),
