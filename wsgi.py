@@ -12,6 +12,7 @@ BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
 CURRENT_YEAR = datetime.datetime.now().year
 CURRENT_WEEK = datetime.datetime.now().date().isocalendar().week
 
+
 # flask cli context setup
 @app.shell_context_processor
 def get_context():
@@ -47,11 +48,11 @@ def scrap():
     from app.controllers import (
         CSXParser,
         NorfolkSouthernParser,
-        UnionParser,
-        KansasCitySouthernParser,
-        CanadianNationalParser,
-        CanadianPacificParser,
-        BNSFParser,
+        # UnionParser,
+        # KansasCitySouthernParser,
+        # CanadianNationalParser,
+        # CanadianPacificParser,
+        # BNSFParser,
     )
     from app.models import Passed
 
