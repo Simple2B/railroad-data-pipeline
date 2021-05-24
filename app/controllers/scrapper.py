@@ -1,6 +1,7 @@
 import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
+# from webdriver_manager.chrome import ChromeDriverManager
 from config import BaseConfig as conf
 from app.logger import log
 
@@ -38,33 +39,33 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                 return i['href']
         log(log.WARNING, "Links not found")
         return None
-    elif company == 'union':
-        links = soup.find_all('a', class_='pdf')
-        for i in links:
-            scrap_data = i.text.split()
-            scrap_week = scrap_data[1]
-            if str(week) == scrap_week:
-                return "https://www.up.com" + i['href']
-        log(log.WARNING, "Links not found")
-        return None
-    elif company == 'kansas_city_southern':
-        links = soup.find_all('a', class_='ext-link')
-        for i in links:
-            scrap_data = i.text.split()
-            scrap_week = scrap_data[1]
-            if str(week) == scrap_week:
-                return "https://investors.kcsouthern.com" + i['href']
-        log(log.WARNING, "Links not found")
-        return None
-    elif company == 'canadian_national':
-        years_of_reports = soup.find_all('select', id="select1")
-        for year in years_of_reports:
-            if year:
-                links = soup.find_all('select', id="select2")
-                for i in links:
-                    scrap_data = i.text.split()
-                    scrap_week = scrap_data[1]
-                    if str(week) == scrap_week:
-                        return "https://www.cn.ca" + i['value']
-        log(log.WARNING, "Links not found")
-        return None
+    # elif company == 'union':
+    #     links = soup.find_all('a', class_='pdf')
+    #     for i in links:
+    #         scrap_data = i.text.split()
+    #         scrap_week = scrap_data[1]
+    #         if str(week) == scrap_week:
+    #             return "https://www.up.com" + i['href']
+    #     log(log.WARNING, "Links not found")
+    #     return None
+    # elif company == 'kansas_city_southern':
+    #     links = soup.find_all('a', class_='ext-link')
+    #     for i in links:
+    #         scrap_data = i.text.split()
+    #         scrap_week = scrap_data[1]
+    #         if str(week) == scrap_week:
+    #             return "https://investors.kcsouthern.com" + i['href']
+    #     log(log.WARNING, "Links not found")
+    #     return None
+    # elif company == 'canadian_national':
+    #     years_of_reports = soup.find_all('select', id="select1")
+    #     for year in years_of_reports:
+    #         if year:
+    #             links = soup.find_all('select', id="select2")
+    #             for i in links:
+    #                 scrap_data = i.text.split()
+    #                 scrap_week = scrap_data[1]
+    #                 if str(week) == scrap_week:
+    #                     return "https://www.cn.ca" + i['value']
+    #     log(log.WARNING, "Links not found")
+    #     return None

@@ -47,7 +47,7 @@ def scrap():
     log(log.INFO, "Scrapper started")
     from app.controllers import (
         CSXParser,
-        NorfolkSouthernParser,
+        # NorfolkSouthernParser,
         # UnionParser,
         # KansasCitySouthernParser,
         # CanadianNationalParser,
@@ -63,7 +63,7 @@ def scrap():
             log(log.INFO, "----------------Week %d", week)
             COMPANIES = {
                 CSXParser: "CSX",
-                NorfolkSouthernParser: "Norfolk Southern",
+                # NorfolkSouthernParser: "Norfolk Southern",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (
