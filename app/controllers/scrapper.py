@@ -1,7 +1,6 @@
 import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
-# from webdriver_manager.chrome import ChromeDriverManager
 from config import BaseConfig as conf
 from app.logger import log
 
