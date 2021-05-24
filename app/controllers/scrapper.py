@@ -35,7 +35,9 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
             scrap_year = scrap_data[0]
             scrap_week = scrap_data[2]
             if scrap_year == str(year) and scrap_week == str(week):
-                return i['href']
+                link = i['href']
+                log(log.INFO, "Found pdf link: [%s]", link)
+                return link
         log(log.WARNING, "Links not found")
         return None
     elif company == 'union':

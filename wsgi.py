@@ -10,7 +10,7 @@ from app.logger import log
 app = create_app()
 BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
 CURRENT_YEAR = datetime.datetime.now().year
-CURRENT_WEEK = datetime.datetime.now().date().isocalendar().week
+CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
 
 # flask cli context setup
@@ -46,9 +46,9 @@ def scrap():
     """Scrapping all companies"""
     log(log.INFO, "Scrapper started")
     from app.controllers import (
-        CSXParser,
-        NorfolkSouthernParser,
-        # UnionParser,
+        # CSXParser,
+        UnionParser,
+        # NorfolkSouthernParser,
         # KansasCitySouthernParser,
         # CanadianNationalParser,
         # CanadianPacificParser,
@@ -62,8 +62,13 @@ def scrap():
         for week in range(1, finish_week):
             log(log.INFO, "----------------Week %d", week)
             COMPANIES = {
-                CSXParser: "CSX",
-                NorfolkSouthernParser: "Norfolk Southern",
+                # CSXParser: "CSX",
+                UnionParser: "Union Parser",
+                # NorfolkSouthernParser: "Norfolk Southern",
+                # KansasCitySouthernParser = "Kansas City Southern Parser",
+                # CanadianNationalParser = "Canadian National Parser",
+                # CanadianPacificParser = "CanadianPacificParser",
+                # BNSFParser = "BNSF Parser",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (

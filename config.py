@@ -16,7 +16,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
 
-    CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", "bin/chromedriver")
+    CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", "/snap/bin/chromium.chromedriver")
 
     @staticmethod
     def configure(app):
