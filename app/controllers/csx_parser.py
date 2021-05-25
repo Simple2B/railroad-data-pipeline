@@ -4,12 +4,10 @@ import datefinder
 import requests
 from datetime import datetime
 import PyPDF2
-from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
-from app.logger import log
 from app.models import Company
 
 
