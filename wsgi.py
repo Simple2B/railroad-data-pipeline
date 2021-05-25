@@ -2,6 +2,7 @@
 import os
 import datetime
 import click
+import time
 
 from app import create_app, db, models
 from app.logger import log
@@ -46,7 +47,7 @@ def scrap():
     """Scrapping all companies"""
     log(log.INFO, "Scrapper started")
     from app.controllers import (
-        # CSXParser,
+        CSXParser,
         UnionParser,
         # NorfolkSouthernParser,
         # KansasCitySouthernParser,
@@ -62,8 +63,8 @@ def scrap():
         for week in range(1, finish_week):
             log(log.INFO, "----------------Week %d", week)
             COMPANIES = {
-                # CSXParser: "CSX",
-                UnionParser: "Union Parser",
+                CSXParser: "CSX",
+                # UnionParser: "Union Parser",
                 # NorfolkSouthernParser: "Norfolk Southern",
                 # KansasCitySouthernParser = "Kansas City Southern Parser",
                 # CanadianNationalParser = "Canadian National Parser",
@@ -85,6 +86,7 @@ def scrap():
                 parser.get_file()
                 parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()
+                time.sleep(2)
 
 
 if __name__ == "__main__":
