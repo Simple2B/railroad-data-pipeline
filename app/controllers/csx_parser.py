@@ -40,7 +40,7 @@ class CSXParser(BaseParser):
 
         viewer = SimplePDFViewer(file)
         for canvas in viewer:
-            pdf_text += " ".join(canvas.strings)
+            pdf_text += "".join(canvas.strings)
 
         matches = datefinder.find_dates(pdf_text)
 
@@ -51,12 +51,22 @@ class CSXParser(BaseParser):
             if i >= COUNT_FIND_DATE:
                 break
 
-        date
+        pdf_text = re.sub(r'\s+', ' ', pdf_text)
+        pdf_text = pdf_text.replace('% Chg', ' % Chg ')
+        pdf_text = pdf_text.split('% Chg')[-1].strip()
+        pdf_text = pdf_text.replace('%', '% ')
 
-        last_skip_word = "% Chg"
+        find_worlds = []
 
-        skip_index = pdf_text.rindex(last_skip_word) + len(last_skip_word)
-        pdf_text = pdf_text[skip_index:].strip()
+        PATERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
+
+        for t in re.finditer(PATERN_WORLD, pdf_text):
+            find_worlds.append(t["name"])
+
+        for word in find_worlds:
+            pdf_text = pdf_text.replace(word, f'{word} ')
+
+        pdf_text = re.sub(r'\s+', ' ', pdf_text).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
@@ -71,28 +81,13 @@ class CSXParser(BaseParser):
             r"(?P<y_chg>[0-9\.\%\-]+)"
         )
 
-        # get the date of report from the general text
-        
-        matches = datefinder.find_dates(format_text)
-
-        month = ""
-        day = ""
-        year = ""
-
-        for match in matches:
-            month = match.month
-            day = match.day
-            year = match.year
-
-        date = datetime(month=month, day=day, year=year)
-
         # list of all products
         products = {}
 
         def get_int_val(val: str) -> int:
             return int(val.replace(",", ""))
 
-        for line in re.finditer(PATTERN, format_text):
+        for line in re.finditer(PATTERN, pdf_text):
             products[line["name"].strip()] = dict(
                 week=dict(
                     current_year=get_int_val(line["w_current_year"]),
