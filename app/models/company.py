@@ -9,7 +9,7 @@ class Company(db.Model, ModelMixin):
     __tablename__ = "companies"
 
     id = db.Column(db.Integer, primary_key=True)
-    company_id = db.Column(db.String)
+    company_id = db.Column(db.String(64))
     carloads = db.Column(db.Integer)
 
     YOYCarloads = db.Column(db.Integer, nullable=True)
@@ -21,5 +21,5 @@ class Company(db.Model, ModelMixin):
     date = db.Column(db.DateTime, default=datetime.now)
     week = db.Column(db.Integer)
     year = db.Column(db.Integer)
-    company_name = db.Column(db.String)
-    product_type = db.Column(db.String)
+    company_name = db.Column(db.String(64))
+    product_type = db.Column(db.String(64))

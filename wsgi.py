@@ -48,7 +48,6 @@ def scrap():
     log(log.INFO, "Scrapper started")
     from app.controllers import (
         CSXParser,
-        # UnionParser,
         UnionParser,
         # NorfolkSouthernParser,
         # KansasCitySouthernParser,
