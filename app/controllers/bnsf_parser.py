@@ -8,7 +8,7 @@ import PyPDF2
 from .scrapper import scrapper
 from .base_parser import BaseParser
 from .carload_types import find_carload_id
-from app.logger import log
+# from app.logger import log
 from app.models import Company
 
 
