@@ -1,4 +1,5 @@
 import re
+import tempfile
 import datefinder
 import requests
 from sqlalchemy import and_
@@ -20,14 +21,14 @@ class BNSFParser(BaseParser):
 
     def get_file(self) -> bool:
         file_url = scrapper("bnsf", self.week_no, self.year_no, self.URL)
-        requests.packages.urllib3.disable_warnings()
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
+        # requests.packages.urllib3.disable_warnings()
+        # requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
         file = requests.get(file_url, stream=True)
-        if file:
-            self.file = file.content
-            return True
-        log(log.ERROR, "File not found")
-        return False
+        file.raise_for_status()
+        self.file = tempfile.NamedTemporaryFile(mode="wb+")
+        for chunk in file.iter_content(chunk_size=4096):
+            self.file.write(chunk)
+        self.file.seek(0)
 
     def parse_data(self, file=None):
         if not file:

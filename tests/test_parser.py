@@ -11,7 +11,7 @@ from app.controllers import CanadianPacificParser, NorfolkSouthernParser, BNSFPa
 from app.models import Company
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/2020-Week-1-AAR.pdf")
+CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/2020-Week-10-AAR_csx.pdf")
 UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/pdf_unp_week_16_carloads.pdf")
 KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/week-17-05-01-2021-aar-carloads.pdf"
@@ -49,7 +49,7 @@ def test_main_page(client):
 def test_csx_parser(client):
     parser = CSXParser(2020, 1)
     with open(CSX_TEST_DATA_FILE, "rb") as file:
-        parser.parse_data(file=file)
+на        parser.parse_data(file=file)
     # COMPANY_ID = "CSX_2020_1_1"
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     parsed_data = Company.query.all()

@@ -3,13 +3,14 @@ import tempfile
 import datefinder
 import requests
 from datetime import datetime
-import PyPDF2
-from urllib.request import urlopen
+from pdfreader import SimplePDFViewer
+# import PyPDF2
+# from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
-from app.logger import log
+# from app.logger import log
 from app.models import Company
 
 
@@ -36,17 +37,26 @@ class CSXParser(BaseParser):
 
         pdf_text = ""
         # reads each of the pdf pages
-        pdf_reader = PyPDF2.PdfFileReader(file)
-        for page_number in range(pdf_reader.numPages):
-            page = pdf_reader.getPage(page_number)
-            pdf_text += page.extractText()
 
-        # remove spaces from the text that we read from the pdf file
-        format_text = re.sub("\n", " ", pdf_text)
+        viewer = SimplePDFViewer(file)
+        for canvas in viewer:
+            pdf_text += " ".join(canvas.strings)
 
-        # the text of which we have a string we make an array of values from it
-        # text_elem = format_text.split()[12:]
-        format_text = " ".join(format_text.split()[12:])
+        matches = datefinder.find_dates(pdf_text)
+
+        COUNT_FIND_DATE = 2
+        date = datetime.now()
+        for i, match in enumerate(matches):
+            date = match
+            if i >= COUNT_FIND_DATE:
+                break
+
+        date
+
+        last_skip_word = "% Chg"
+
+        skip_index = pdf_text.rindex(last_skip_word) + len(last_skip_word)
+        pdf_text = pdf_text[skip_index:].strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
@@ -62,6 +72,7 @@ class CSXParser(BaseParser):
         )
 
         # get the date of report from the general text
+        
         matches = datefinder.find_dates(format_text)
 
         month = ""
