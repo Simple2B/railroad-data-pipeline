@@ -2,6 +2,7 @@
 import os
 import datetime
 import click
+import time
 
 from app import create_app, db, models
 from app.logger import log
@@ -10,7 +11,7 @@ from app.logger import log
 app = create_app()
 BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
 CURRENT_YEAR = datetime.datetime.now().year
-CURRENT_WEEK = datetime.datetime.now().date().isocalendar().week
+CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
 
 # flask cli context setup
@@ -47,6 +48,7 @@ def scrap():
     log(log.INFO, "Scrapper started")
     from app.controllers import (
         CSXParser,
+        # UnionParser,
         # NorfolkSouthernParser,
         # UnionParser,
         # KansasCitySouthernParser,
@@ -63,7 +65,12 @@ def scrap():
             log(log.INFO, "----------------Week %d", week)
             COMPANIES = {
                 CSXParser: "CSX",
+                # UnionParser: "Union Parser",
                 # NorfolkSouthernParser: "Norfolk Southern",
+                # KansasCitySouthernParser = "Kansas City Southern Parser",
+                # CanadianNationalParser = "Canadian National Parser",
+                # CanadianPacificParser = "CanadianPacificParser",
+                # BNSFParser = "BNSF Parser",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (
@@ -80,6 +87,7 @@ def scrap():
                 parser.get_file()
                 parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()
+                time.sleep(2)
 
 
 if __name__ == "__main__":

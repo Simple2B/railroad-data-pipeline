@@ -1,6 +1,8 @@
 import os
+from dotenv import load_dotenv
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(base_dir, ".env"))
 
 
 class BaseConfig(object):
@@ -14,7 +16,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
 
-    CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", "bin/chromedriver")
+    CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", "/snap/bin/chromium.chromedriver")
 
     @staticmethod
     def configure(app):

@@ -1,13 +1,13 @@
 import re
+import tempfile
 import datefinder
+import requests
 from datetime import datetime
 import PyPDF2
-from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
-from app.logger import log
 from app.models import Company
 
 
@@ -20,12 +20,13 @@ class CSXParser(BaseParser):
 
     def get_file(self) -> bool:
         file_url = scrapper("csx", self.week_no, self.year_no, self.URL)
-        file = urlopen(file_url)
-        if file:
-            self.file = file
-            return True
-        log(log.ERROR, "File not found")
-        return False
+        file = requests.get(file_url, stream=True)
+        file.raise_for_status()
+        self.file = tempfile.NamedTemporaryFile(mode="wb+")
+        for chunk in file.iter_content(chunk_size=4096):
+            self.file.write(chunk)
+        self.file.seek(0)
+        return True
 
     def parse_data(self, file=None):
         if not file:
