@@ -72,3 +72,14 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
                         return "https://www.cn.ca" + i['value']
         log(log.WARNING, "Links not found")
         return None
+    elif company == 'canadian_pacific':
+        tags = soup.find_all('a')
+        link = [link for link in tags if link.text == "HERE"][0].attrs['href']
+        date = link.split("/")
+        for i in links:
+            scrap_data = i.text.split()
+            scrap_week = scrap_data[1]
+            if str(week) == scrap_week:
+                return "https://investors.kcsouthern.com" + i['href']
+        log(log.WARNING, "Links not found")
+        return None

@@ -18,7 +18,7 @@ class CanadianPacificParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        file_url = scrapper("canadian_national", self.week_no, self.year_no, self.URL)
+        file_url = scrapper("canadian_pacific", self.week_no, self.year_no, self.URL)
         requests.packages.urllib3.disable_warnings()
         requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
         file = requests.get(file_url, stream=True)
