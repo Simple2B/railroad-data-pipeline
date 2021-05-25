@@ -48,7 +48,9 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
             scrap_data = i.text.split()
             scrap_week = scrap_data[1]
             if str(week) == scrap_week:
-                return "https://www.up.com" + i['href']
+                link = "https://www.up.com" + i['href']
+                log(log.INFO, "Found pdf link: [%s]", link)
+                return link
         log(log.WARNING, "Links not found")
         return None
     elif company == 'kansas_city_southern':
