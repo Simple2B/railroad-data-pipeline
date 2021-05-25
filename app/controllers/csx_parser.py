@@ -72,7 +72,7 @@ class CSXParser(BaseParser):
         )
 
         # get the date of report from the general text
-        
+
         matches = datefinder.find_dates(format_text)
 
         month = ""

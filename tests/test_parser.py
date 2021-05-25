@@ -49,7 +49,7 @@ def test_main_page(client):
 def test_csx_parser(client):
     parser = CSXParser(2020, 1)
     with open(CSX_TEST_DATA_FILE, "rb") as file:
-на        parser.parse_data(file=file)
+        parser.parse_data(file=file)
     # COMPANY_ID = "CSX_2020_1_1"
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     parsed_data = Company.query.all()
