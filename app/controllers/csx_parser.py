@@ -3,11 +3,14 @@ import tempfile
 import datefinder
 import requests
 from datetime import datetime
-import PyPDF2
+from pdfreader import SimplePDFViewer
+# import PyPDF2
+# from urllib.request import urlopen
 from sqlalchemy import and_
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
+# from app.logger import log
 from app.models import Company
 
 
@@ -34,17 +37,36 @@ class CSXParser(BaseParser):
 
         pdf_text = ""
         # reads each of the pdf pages
-        pdf_reader = PyPDF2.PdfFileReader(file)
-        for page_number in range(pdf_reader.numPages):
-            page = pdf_reader.getPage(page_number)
-            pdf_text += page.extractText()
 
-        # remove spaces from the text that we read from the pdf file
-        format_text = re.sub("\n", " ", pdf_text)
+        viewer = SimplePDFViewer(file)
+        for canvas in viewer:
+            pdf_text += "".join(canvas.strings)
 
-        # the text of which we have a string we make an array of values from it
-        # text_elem = format_text.split()[12:]
-        format_text = " ".join(format_text.split()[12:])
+        matches = datefinder.find_dates(pdf_text)
+
+        COUNT_FIND_DATE = 2
+        date = datetime.now()
+        for i, match in enumerate(matches):
+            date = match
+            if i >= COUNT_FIND_DATE:
+                break
+
+        pdf_text = re.sub(r'\s+', ' ', pdf_text)
+        pdf_text = pdf_text.replace('% Chg', ' % Chg ')
+        pdf_text = pdf_text.split('% Chg')[-1].strip()
+        pdf_text = pdf_text.replace('%', '% ')
+
+        find_worlds = []
+
+        PATERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
+
+        for t in re.finditer(PATERN_WORLD, pdf_text):
+            find_worlds.append(t["name"])
+
+        for word in find_worlds:
+            pdf_text = pdf_text.replace(word, f'{word} ')
+
+        pdf_text = re.sub(r'\s+', ' ', pdf_text).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
@@ -59,27 +81,13 @@ class CSXParser(BaseParser):
             r"(?P<y_chg>[0-9\.\%\-]+)"
         )
 
-        # get the date of report from the general text
-        matches = datefinder.find_dates(format_text)
-
-        month = ""
-        day = ""
-        year = ""
-
-        for match in matches:
-            month = match.month
-            day = match.day
-            year = match.year
-
-        date = datetime(month=month, day=day, year=year)
-
         # list of all products
         products = {}
 
         def get_int_val(val: str) -> int:
             return int(val.replace(",", ""))
 
-        for line in re.finditer(PATTERN, format_text):
+        for line in re.finditer(PATTERN, pdf_text):
             products[line["name"].strip()] = dict(
                 week=dict(
                     current_year=get_int_val(line["w_current_year"]),
