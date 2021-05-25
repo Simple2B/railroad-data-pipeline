@@ -15,6 +15,7 @@ PyPDF2
 datefinder
 pandas
 xlrd==1.2.0
+webdriver-manager
 # pdfminer.six
 # textract
 
@@ -34,7 +35,7 @@ text-extractor
 requests
 beautifulsoup4
 selenium
- 
+
 flake8
 black
 pytest
