@@ -9,6 +9,7 @@ from .scrapper import scrapper
 from .base_parser import BaseParser
 from .carload_types import find_carload_id
 from app.models import Company
+from app.logger import log
 
 
 class BNSFParser(BaseParser):
@@ -20,8 +21,9 @@ class BNSFParser(BaseParser):
 
     def get_file(self) -> bool:
         file_url = scrapper("bnsf", self.week_no, self.year_no, self.URL)
-        # requests.packages.urllib3.disable_warnings()
-        # requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
+        if not file_url:
+            log(log.ERROR, "File URL is not found.")
+            return False
         file = requests.get(file_url, stream=True)
         file.raise_for_status()
         self.file = tempfile.NamedTemporaryFile(mode="wb+")
@@ -32,6 +34,10 @@ class BNSFParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
+        
+        if not self.file:
+            log(log.ERROR, "Nothing to parse, file is not found")
+            return None
 
         pdf_reader = PyPDF2.PdfFileReader(file)
 

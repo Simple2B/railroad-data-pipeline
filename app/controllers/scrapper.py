@@ -88,7 +88,9 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
             )
             scrap_week = date.isocalendar()[1]
             if week == scrap_week and int(scrap_date[2]) == year:
-                return "http://www.bnsf.com" + i["href"]
+                link = "http://www.bnsf.com" + i["href"]
+                log(log.INFO, "Found pdf link: [%s]", link)
+                return link
         log(log.WARNING, "Links not found")
         return None
     elif company == "norfolk_southern":
