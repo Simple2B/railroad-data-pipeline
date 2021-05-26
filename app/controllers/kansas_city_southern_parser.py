@@ -8,7 +8,6 @@ import PyPDF2
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
-from app.logger import log
 from app.models import Company
 
 
@@ -35,10 +34,6 @@ class KansasCitySouthernParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-
-        if self.file is None:
-            log(log.ERROR, ("File is not found"))
-            return False
 
         pdf_text = ""
         # reads each of the pdf pages

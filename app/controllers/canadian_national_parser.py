@@ -37,8 +37,7 @@ class CanadianNationalParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        if not self.file:
-            return None
+
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)

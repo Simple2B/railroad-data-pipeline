@@ -35,10 +35,6 @@ class BNSFParser(BaseParser):
         if not file:
             file = self.file
 
-        if not self.file:
-            log(log.ERROR, "Nothing to parse, file is not found")
-            return None
-
         pdf_reader = PyPDF2.PdfFileReader(file)
 
         page = pdf_reader.getPage(0)
