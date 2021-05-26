@@ -5,20 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
-            "type": "python",
-            "request": "launch",
-            "module": "flask",
-            "env": {
-                "FLASK_APP": "wsgi:app",
-                "FLASK_ENV": "development"
-            },
-            "args": [
-                "run",
-            ],
-            "jinja": true
-        },
-        {
             "name": "scrap",
             "type": "python",
             "request": "launch",
@@ -29,6 +15,20 @@
             },
             "args": [
                 "scrap",
+            ],
+            "jinja": true
+        },
+        {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "wsgi:app",
+                "FLASK_ENV": "development"
+            },
+            "args": [
+                "run",
             ],
             "jinja": true
         }

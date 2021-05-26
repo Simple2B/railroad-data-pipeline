@@ -52,4 +52,3 @@ def data_scrap():
                     time.sleep(5)
                 parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()
-                time.sleep(2)

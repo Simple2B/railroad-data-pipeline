@@ -8,15 +8,6 @@ from app.logger import log
 
 
 def scrapper(company: str, week: int, year: int, url: str) -> str or None:
-
-    """[Scrapper for railroad reports]
-
-    Args:
-        company (str): [company]
-        week (int): [week]
-        year (int): [year]
-        url (str): [url for scrapping]
-    """
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
