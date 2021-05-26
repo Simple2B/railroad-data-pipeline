@@ -19,15 +19,18 @@ class CSXParser(BaseParser):
         self.URL = "https://investors.csx.com/metrics/default.aspx"
         self.week_no = week_no
         self.year_no = year_no
-        self.file = None  # method get_file() store here file stream
+        self.file = None
 
     def get_file(self) -> bool:
         file_url = scrapper("csx", self.week_no, self.year_no, self.URL)
-        file = requests.get(file_url, stream=True)
-        file.raise_for_status()
-        self.file = tempfile.NamedTemporaryFile(mode="wb+")
-        for chunk in file.iter_content(chunk_size=4096):
+        if not file_url:
+            return False
+        response = requests.get(file_url, stream=True)
+        response.raise_for_status()
+        self.file = tempfile.NamedTemporaryFile(mode="wb+", suffix=".pdf")
+        for chunk in response.iter_content(chunk_size=4096):
             self.file.write(chunk)
+        self.file.flush()
         self.file.seek(0)
         return True
 
@@ -35,12 +38,15 @@ class CSXParser(BaseParser):
         if not file:
             file = self.file
 
-        pdf_text = ""
+        pdf_text = self.get_pdf_text(file)
         # reads each of the pdf pages
 
-        viewer = SimplePDFViewer(file)
-        for canvas in viewer:
-            pdf_text += "".join(canvas.strings)
+        if not pdf_text:
+            pdf_text = ""
+            viewer = SimplePDFViewer(file)
+            viewer.render()
+            for canvas in viewer:
+                pdf_text += "".join(canvas.strings)
 
         matches = datefinder.find_dates(pdf_text)
 
@@ -58,9 +64,9 @@ class CSXParser(BaseParser):
 
         find_worlds = []
 
-        PATERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
+        PATTERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
 
-        for t in re.finditer(PATERN_WORLD, pdf_text):
+        for t in re.finditer(PATTERN_WORLD, pdf_text):
             find_worlds.append(t["name"])
 
         for word in find_worlds:

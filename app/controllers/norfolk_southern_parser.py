@@ -8,7 +8,6 @@ from .scrapper import scrapper
 from .base_parser import BaseParser
 from .carload_types import find_carload_id
 from app.models import Company
-from app.logger import log
 
 
 class NorfolkSouthernParser(BaseParser):
@@ -32,10 +31,6 @@ class NorfolkSouthernParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-
-        if not self.file:
-            log(log.ERROR, "Nothing to parse, file is not found")
-            return None
 
         pdf_text = ""
         # reads each of the pdf pages

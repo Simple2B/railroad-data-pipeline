@@ -35,10 +35,8 @@ class CanadianNationalParser(BaseParser):
         return True
 
     def parse_data(self, file=None):
-        if file:
-            self.file = file
-        elif not self.file:
-            return None
+        if not file:
+            file = self.file
 
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(self.file)
