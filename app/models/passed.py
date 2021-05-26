@@ -12,4 +12,4 @@ class Passed(db.Model, ModelMixin):
     date = db.Column(db.DateTime, default=datetime.now)
     week = db.Column(db.Integer)
     year = db.Column(db.Integer)
-    company_name = db.Column(db.String)
+    company_name = db.Column(db.String(64))
