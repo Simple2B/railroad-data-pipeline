@@ -30,6 +30,7 @@ class BNSFParser(BaseParser):
         for chunk in file.iter_content(chunk_size=4096):
             self.file.write(chunk)
         self.file.seek(0)
+        return True
 
     def parse_data(self, file=None):
         if not file:
