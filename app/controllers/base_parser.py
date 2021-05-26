@@ -19,7 +19,7 @@ class BaseParser:
             text += page.extractText()
         if text:
             text = " ".join(text.split("\n"))
-        return text
+        return text.strip()
 
 
 def get_int_val(val: str) -> int:

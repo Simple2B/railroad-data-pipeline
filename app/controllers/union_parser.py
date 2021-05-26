@@ -21,6 +21,8 @@ class UnionParser(BaseParser):
 
     def get_file(self) -> bool:
         file_url = scrapper('union', self.week_no, self.year_no, self.URL)
+        if not file_url:
+            return False
         requests.packages.urllib3.disable_warnings()
         requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
         file = requests.get(file_url, stream=True)
@@ -34,10 +36,11 @@ class UnionParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        viewer = SimplePDFViewer(file.file)
-        text_pdf = ""
-        for canvas in viewer:
-            text_pdf += " ".join(canvas.strings)
+        text_pdf = self.get_pdf_text(file)
+        if not text_pdf:
+            viewer = SimplePDFViewer(file)
+            for canvas in viewer:
+                text_pdf += " ".join(canvas.strings)
 
         matches = datefinder.find_dates(text_pdf)
 
