@@ -3,7 +3,7 @@ import tempfile
 import datefinder
 import requests
 from datetime import datetime
-import time
+# import time
 from pdfreader import SimplePDFViewer
 from bs4 import BeautifulSoup
 from selenium import webdriver

@@ -40,7 +40,7 @@ class UnionParser(BaseParser):
         if not text_pdf:
             viewer = SimplePDFViewer(file)
             for canvas in viewer:
-                text_pdf += " ".join(canvas.strings)
+                text_pdf += "".join(canvas.strings)
 
         matches = datefinder.find_dates(text_pdf)
 
@@ -52,8 +52,26 @@ class UnionParser(BaseParser):
                 break
 
         last_skip_word = "% Chg"
-        skip_index = text_pdf.rindex(last_skip_word) + len(last_skip_word)
+        try:
+            skip_index = text_pdf.rindex(last_skip_word) + len(last_skip_word)
+        except ValueError:
+            skip_index = 0
+
         text_pdf = text_pdf[skip_index:].strip()
+        text_pdf = text_pdf.replace('%', '% ')
+
+        find_worlds = []
+
+        PATTERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
+
+        for t in re.finditer(PATTERN_WORLD, text_pdf):
+            find_worlds.append(t["name"])
+
+        for word in find_worlds:
+            text_pdf = text_pdf.replace(word, f'{word} ')
+
+        text_pdf = re.sub(r'\s+', ' ', text_pdf).strip()
+
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
             r"(?P<w_current_year>[0-9\,]+)\s+"

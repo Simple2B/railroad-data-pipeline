@@ -23,8 +23,8 @@ def data_scrap():
         for week in range(1, finish_week):
             log(log.INFO, "----------------Week %d of %d", week, year)
             COMPANIES = {
-                CSXParser: "CSX",
-                # UnionParser: "Union Parser",
+                # CSXParser: "CSX",
+                UnionParser: "Union Parser",
                 # NorfolkSouthernParser: "Norfolk Southern",
                 # KansasCitySouthernParser: "Kansas City Southern Parser",
                 # CanadianNationalParser: "Canadian National Parser",
