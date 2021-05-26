@@ -48,7 +48,7 @@ class KansasCitySouthernParser(BaseParser):
         # the text of which we have a string we make an array of values from it
         format_text = " ".join(format_text.split()[12:])
 
-        PATERN = (
+        PATTERN = (
             r"(?P<name>[a-zA-Z\ \(\)\.\&\,\-]+)\s+"
             r"(?P<KCSR>[0-9\,]+)\s+"
             r"(?P<KCSM>[0-9\,]+)\s+"
@@ -57,16 +57,9 @@ class KansasCitySouthernParser(BaseParser):
 
         # get the date of report from the general text
         matches = datefinder.find_dates(format_text)
-        month = ""
-        day = ""
-        year = ""
-
+        date = datetime.now()
         for match in matches:
-            month = match.month
-            day = match.day
-            year = match.year
-
-        date = datetime(month=month, day=day, year=year)
+            date = match
 
         # list of all products
         products = {}
@@ -74,7 +67,7 @@ class KansasCitySouthernParser(BaseParser):
         def get_int_val(val: str) -> int:
             return int(val.replace(",", ""))
 
-        for line in re.finditer(PATERN, format_text):
+        for line in re.finditer(PATTERN, format_text):
             products[line["name"]] = dict(
                 KCSR=get_int_val(line["KCSR"]),
                 KCSM=get_int_val(line["KCSM"]),
