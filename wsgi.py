@@ -9,7 +9,7 @@ from app.logger import log
 
 
 app = create_app()
-BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
+BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2020"))
 CURRENT_YEAR = datetime.datetime.now().year
 CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
@@ -50,11 +50,10 @@ def scrap():
         CSXParser,
         UnionParser,
         # NorfolkSouthernParser,
-        # UnionParser,
         # KansasCitySouthernParser,
         # CanadianNationalParser,
         # CanadianPacificParser,
-        # BNSFParser,
+        BNSFParser,
     )
     from app.models import Passed
 
@@ -70,7 +69,7 @@ def scrap():
                 # KansasCitySouthernParser: "Kansas City Southern Parser",
                 # CanadianNationalParser: "Canadian National Parser",
                 # CanadianPacificParser: "CanadianPacificParser",
-                # BNSFParser: "BNSF Parser",
+                BNSFParser: "BNSF Parser",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (

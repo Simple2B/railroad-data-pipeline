@@ -8,6 +8,7 @@ from app.logger import log
 
 
 def scrapper(company: str, week: int, year: int, url: str) -> str or None:
+
     """[Scrapper for railroad reports]
 
     Args:
