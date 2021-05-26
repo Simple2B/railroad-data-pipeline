@@ -1,5 +1,6 @@
 from PyPDF2 import PdfFileReader
 
+
 class BaseParser:
     def __init__(self):
         pass

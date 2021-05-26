@@ -8,7 +8,6 @@ from .base_parser import BaseParser, get_int_val
 from pdfreader import SimplePDFViewer
 from .scrapper import scrapper
 from .carload_types import find_carload_id
-from app.logger import log
 from app.models import Company
 from sqlalchemy import and_
 

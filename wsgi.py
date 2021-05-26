@@ -1,8 +1,5 @@
 #!/user/bin/env python
-import os
-import datetime
 import click
-import time
 
 from app import create_app, db, models
 from app.logger import log
