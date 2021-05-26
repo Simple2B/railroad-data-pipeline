@@ -13,6 +13,7 @@ from app.models import Company
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSX_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/2020-Week-10-AAR_csx.pdf")
 UNION_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/pdf_unp_week_16_carloads.pdf")
+UNION_TEST_DATA_FILE2 = os.path.join(BASE_DIR, "data/pdf_unp_week_3_2021_carloads.pdf")
 KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/week-17-05-01-2021-aar-carloads.pdf"
 )
@@ -60,6 +61,17 @@ def test_csx_parser(client):
 def test_union_parser(client):
     parser = UnionParser(2021, 2)
     with open(UNION_TEST_DATA_FILE, "rb") as file:
+        parser.parse_data(file=file)
+    # COMPANY_ID = "Union_Pacific_2021_2_1"
+    # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    parsed_data = Company.query.all()
+    assert parsed_data
+    assert len(parsed_data) == 18
+
+
+def test_union_parser2(client):
+    parser = UnionParser(2021, 3)
+    with open(UNION_TEST_DATA_FILE2, "rb") as file:
         parser.parse_data(file=file)
     # COMPANY_ID = "Union_Pacific_2021_2_1"
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()

@@ -36,7 +36,7 @@ class UnionParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        text_pdf = self.get_pdf_text(file)
+        text_pdf = self.pdf2text(file)
         if not text_pdf:
             viewer = SimplePDFViewer(file)
             for canvas in viewer:
@@ -58,19 +58,6 @@ class UnionParser(BaseParser):
             skip_index = 0
 
         text_pdf = text_pdf[skip_index:].strip()
-        text_pdf = text_pdf.replace('%', '% ')
-
-        find_worlds = []
-
-        PATTERN_WORLD = r"(?P<name>[a-zA-Z\(\)\&]+)"
-
-        for t in re.finditer(PATTERN_WORLD, text_pdf):
-            find_worlds.append(t["name"])
-
-        for word in find_worlds:
-            text_pdf = text_pdf.replace(word, f'{word} ')
-
-        text_pdf = re.sub(r'\s+', ' ', text_pdf).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"

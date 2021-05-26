@@ -1,6 +1,7 @@
 import re
 from PyPDF2 import PdfFileReader
 from pdfreader import SimplePDFViewer
+from pdf_tools import get_doc, get_text
 
 
 class BaseParser:
@@ -13,11 +14,18 @@ class BaseParser:
     def parse_data(self, file=None):
         raise NotImplementedError()
 
+    def pdf2text(self, file):
+        doc = get_doc(file.name)
+        text = get_text(doc)
+        if text:
+            text = " ".join(text.split("\n"))
+        return text.strip()
+
     def get_pdf_text(self, file):
         pdf = PdfFileReader(file)
         text = ""
-        for i in range(pdf.getNumPages()):
-            page = pdf.getPage(i)
+        for page in pdf.pages:
+            # page = pdf.getPage(i)
             text += page.extractText()
         if text:
             text = " ".join(text.split("\n"))
