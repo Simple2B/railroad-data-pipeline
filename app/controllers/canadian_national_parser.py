@@ -1,10 +1,10 @@
 import re
 from datetime import datetime
-import requests
+import tempfile
 import pandas as pd
 from sqlalchemy import and_
+from urllib.request import urlopen
 from .base_parser import BaseParser
-from .scrapper import scrapper
 from .carload_types import find_carload_id
 from app.logger import log
 from app.models import Company
@@ -18,20 +18,27 @@ class CanadianNationalParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        file_url = scrapper("canadian_national", self.week_no, self.year_no, self.URL)
-        requests.packages.urllib3.disable_warnings()
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
-        file = requests.get(file_url, stream=True)
-        if file:
-            self.file = file.content
-            return True
-        log(log.ERROR, "File not found")
-        return False
+        if len(str(self.week_no)) == 1:
+            week = f"0{self.week_no}"
+        else:
+            week = self.week_no
+        file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{week}.xlsx"  # noqa E501
+        file = urlopen(file_url)
+        if file.url == 'https://www.cn.ca/404':
+            log(log.ERROR, "File is not found.")
+            return None
+        log(log.INFO, "Found pdf link: [%s]", file_url)
+        self.file = tempfile.NamedTemporaryFile(mode="wb+")
+        for line in file.readlines():
+            self.file.write(line)
+        self.file.seek(0)
+        return True
 
     def parse_data(self, file=None):
         if not file:
             file = self.file
-
+        if not self.file:
+            return None
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
