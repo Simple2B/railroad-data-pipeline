@@ -11,3 +11,4 @@ env/
 
 # project log
 railroad_data_pipeline.log
+.DS_Store

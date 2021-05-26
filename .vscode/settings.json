@@ -6,7 +6,9 @@
     "python.terminal.activateEnvironment": true,
     "cSpell.words": [
         "BNSF",
-        "rindex"
+        "dotenv",
+        "rindex",
+        "wsgi"
     ],
     "files.watcherExclude": {
         "**/.git/objects/**": true,

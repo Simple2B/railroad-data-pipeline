@@ -35,6 +35,7 @@ text-extractor
 requests
 beautifulsoup4
 selenium
+PyMySQL
 
 flake8
 black
