@@ -1,37 +1,73 @@
 import pytest
-from app.controllers import scrapper, CSXParser, UnionParser, KansasCitySouthernParser, CanadianNationalParser
+from app.controllers import (
+    scrapper,
+    CSXParser,
+    UnionParser,
+    KansasCitySouthernParser,
+    CanadianNationalParser,
+    CanadianPacificParser
+)
 from app.controllers import NorfolkSouthernParser, BNSFParser
 from config import BaseConfig as conf
 
 
+WEEK = conf.CURRENT_WEEK
+YEAR = conf.CURRENT_YEAR
+
+
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_scrapper():
-    scrap = scrapper("csx", 20, 2020, "https://investors.csx.com/metrics/default.aspx")
+    scrap = scrapper(
+        "csx", WEEK - 1, YEAR, "https://investors.csx.com/metrics/default.aspx"
+    )
     assert scrap
     scrap = scrapper(
         "union",
-        12,
-        2021,
+        WEEK - 1,
+        YEAR,
         "https://www.up.com/investor/aar-stb_reports/2021_Carloads/index.htm",
     )
     assert scrap
-    scrap = scrapper("kansas_city_southern", 2, 2021,
-                     "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en")
+    scrap = scrapper(
+        "kansas_city_southern",
+        WEEK - 1,
+        YEAR,
+        "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=en",
+    )
     assert scrap
     scrap = scrapper(
-        "bnsf", 2, 2021, "http://www.bnsf.com/about-bnsf/financial-information/index.html#Weekly+Carload+Reports")
-    scrap = scrapper("canadian_national", 2, 2021, "https://www.cn.ca/en/investors/key-weekly-metrics/")
+        "bnsf",
+        WEEK - 2,
+        YEAR,
+        "http://www.bnsf.com/about-bnsf/financial-information/index.html#Weekly+Carload+Reports",
+    )
     assert scrap
-    scrap = scrapper("canadian_pacific", 2, 2021, "https://investor.cpr.ca/key-metrics/default.aspx")
+    scrap = scrapper(
+        "canadian_national",
+        WEEK,
+        YEAR,
+        "https://www.cn.ca/en/investors/key-weekly-metrics/",
+    )
+    assert scrap is None
+    scrap = scrapper(
+        "canadian_pacific",
+        WEEK,
+        YEAR,
+        "https://investor.cpr.ca/key-metrics/default.aspx",
+    )
     assert scrap
-    scrap = scrapper("norfolk_southern", 2, 2020,
-                     "http://www.nscorp.com/content/nscorp/en/investor-relations/performance-metrics.html")
+    scrap = scrapper(
+        "norfolk_southern",
+        WEEK,
+        YEAR,
+        "http://www.nscorp.com/content/nscorp/en/investor-relations/performance-metrics.html",
+    )
     assert scrap
 
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_csx_scrapper():
-    csx = CSXParser(2020, 25)
+    csx = CSXParser(YEAR, WEEK - 1)
     assert csx
     assert csx.file is None
     assert csx.get_file()
@@ -40,7 +76,7 @@ def test_csx_scrapper():
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_union_scraper():
-    union = UnionParser(2021, 15)
+    union = UnionParser(YEAR, WEEK - 1)
     assert union
     assert union.file is None
     assert union.get_file()
@@ -49,7 +85,7 @@ def test_union_scraper():
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_kansas_city_southern_scraper():
-    kansas_city_southern = KansasCitySouthernParser(2021, 1)
+    kansas_city_southern = KansasCitySouthernParser(YEAR, WEEK - 1)
     assert kansas_city_southern
     assert kansas_city_southern.file is None
     assert kansas_city_southern.get_file()
@@ -58,7 +94,7 @@ def test_kansas_city_southern_scraper():
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_canadian_national_scraper():
-    canadian_national = CanadianNationalParser(2021, 1)
+    canadian_national = CanadianNationalParser(YEAR, WEEK)
     assert canadian_national
     assert canadian_national.file is None
     assert canadian_national.get_file()
@@ -66,8 +102,17 @@ def test_canadian_national_scraper():
 
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
+def test_canadian_pacific_scraper():
+    canadian_pacific = CanadianPacificParser(YEAR, WEEK)
+    assert canadian_pacific
+    assert canadian_pacific.file is None
+    assert canadian_pacific.get_file()
+    assert canadian_pacific.file
+
+
+@pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_norfolk_southern_scraper():
-    norfolk_southern = NorfolkSouthernParser(2020, 2)
+    norfolk_southern = NorfolkSouthernParser(YEAR, WEEK)
     assert norfolk_southern
     assert norfolk_southern.file is None
     assert norfolk_southern.get_file()
@@ -76,7 +121,7 @@ def test_norfolk_southern_scraper():
 
 @pytest.mark.skipif(not conf.CHROME_DRIVER_PATH, reason="ChromeDriver not configured")
 def test_bnsf_scraper():
-    bnsf = BNSFParser(2021, 1)
+    bnsf = BNSFParser(YEAR, WEEK - 2)
     assert bnsf
     assert bnsf.file is None
     assert bnsf.get_file()
