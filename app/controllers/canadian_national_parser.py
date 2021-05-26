@@ -39,7 +39,7 @@ class CanadianNationalParser(BaseParser):
             file = self.file
 
         # Load spreadsheet
-        file_xlsx = pd.ExcelFile(self.file)
+        file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
         xlsx_dicts = read_xlsx.to_dict(orient="dictionary_xlsx")
 
