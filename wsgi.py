@@ -10,7 +10,7 @@ from app.logger import log
 
 app = create_app()
 BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
-CURRENT_YEAR = datetime.datetime.now().year
+CURRENT_YEAR = datetime.datetime.now().year + 1
 CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
 

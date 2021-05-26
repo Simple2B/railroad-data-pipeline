@@ -1,9 +1,10 @@
 import re
 import datefinder
+import tempfile
+from urllib.request import urlopen
 from sqlalchemy import and_
 from datetime import datetime
 import PyPDF2
-from urllib.request import urlopen
 from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
@@ -13,7 +14,7 @@ from app.models import Company
 
 class KansasCitySouthernParser(BaseParser):
     def __init__(self, year_no: int, week_no: int):
-        self.URL = "https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/2021?sc_lang=e"
+        self.URL = f"https://investors.kcsouthern.com/performance-metrics/aar-weekly-carload-report/{year_no}?sc_lang=e"
         self.week_no = week_no
         self.year_no = year_no
         self.file = None  # method get_file() store here file stream
@@ -22,16 +23,22 @@ class KansasCitySouthernParser(BaseParser):
         file_url = scrapper(
             "kansas_city_southern", self.week_no, self.year_no, self.URL
         )
+        if file_url is None:
+            return False
         file = urlopen(file_url)
-        if file:
-            self.file = file
-            return True
-        log(log.ERROR, "File not found")
-        return False
+        self.file = tempfile.NamedTemporaryFile(mode="wb+")
+        for line in file.readlines():
+            self.file.write(line)
+        self.file.seek(0)
+        return True
 
     def parse_data(self, file=None):
         if not file:
             file = self.file
+
+        if self.file is None:
+            log(log.ERROR, ("File is not found"))
+            return False
 
         pdf_text = ""
         # reads each of the pdf pages
