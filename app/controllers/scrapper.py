@@ -110,13 +110,18 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
         log(log.WARNING, "Links not found")
         return None
     elif company == 'canadian_pacific':
-        tags = soup.find_all('a')
-        link = [link for link in tags if link.text == "HERE"][0].attrs['href']
+        tags = soup.find_all('a', class_="button-link")
+        while len(tags) != 2:
+            browser.get(url)
+            generated_html = browser.page_source
+            soup = BeautifulSoup(generated_html, "html.parser")
+            tags = soup.find_all('a', class_="button-link")
+            sleep(1)
+        link = tags[0].attrs["href"]
         date = link.split("/")
-        for i in links:
-            scrap_data = i.text.split()
-            scrap_week = scrap_data[1]
-            if str(week) == scrap_week:
-                return "https://investors.kcsouthern.com" + i['href']
+        scrap_week = datetime(year=int(date[6]), month=int(date[7]), day=int(date[8])).isocalendar()[1]
+        if week == scrap_week and int(date[6]) == year:
+            log(log.INFO, "Found pdf link: [%s]", link)
+            return link
         log(log.WARNING, "Links not found")
         return None
