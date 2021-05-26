@@ -1,12 +1,13 @@
 import re
 from datetime import datetime
+import tempfile
+
 import datefinder
 import requests
 from .base_parser import BaseParser, get_int_val
 from pdfreader import SimplePDFViewer
 from .scrapper import scrapper
 from .carload_types import find_carload_id
-from app.logger import log
 from app.models import Company
 from sqlalchemy import and_
 
@@ -20,22 +21,26 @@ class UnionParser(BaseParser):
 
     def get_file(self) -> bool:
         file_url = scrapper('union', self.week_no, self.year_no, self.URL)
+        if not file_url:
+            return False
         requests.packages.urllib3.disable_warnings()
         requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
         file = requests.get(file_url, stream=True)
-        if file:
-            self.file = file.content
-            return True
-        log(log.ERROR, "File not found")
-        return False
+        file.raise_for_status()
+        self.file = tempfile.NamedTemporaryFile(mode="wb+")
+        for chunk in file.iter_content(chunk_size=4096):
+            self.file.write(chunk)
+        self.file.seek(0)
+        return True
 
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        viewer = SimplePDFViewer(file)
-        text_pdf = ""
-        for canvas in viewer:
-            text_pdf += " ".join(canvas.strings)
+        text_pdf = self.get_pdf_text(file)
+        if not text_pdf:
+            viewer = SimplePDFViewer(file)
+            for canvas in viewer:
+                text_pdf += " ".join(canvas.strings)
 
         matches = datefinder.find_dates(text_pdf)
 
