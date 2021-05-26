@@ -1,4 +1,5 @@
 import os
+import datetime
 from dotenv import load_dotenv
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +18,10 @@ class BaseConfig(object):
     WTF_CSRF_ENABLED = False
 
     CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", None)
+
+    BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2019"))
+    CURRENT_YEAR = datetime.datetime.now().year
+    CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
     @staticmethod
     def configure(app):
