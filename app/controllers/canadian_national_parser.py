@@ -35,12 +35,13 @@ class CanadianNationalParser(BaseParser):
         return True
 
     def parse_data(self, file=None):
-        if not file:
-            file = self.file
-        if not self.file:
+        if file:
+            self.file = file
+        elif not self.file:
             return None
+
         # Load spreadsheet
-        file_xlsx = pd.ExcelFile(file)
+        file_xlsx = pd.ExcelFile(self.file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
         xlsx_dicts = read_xlsx.to_dict(orient="dictionary_xlsx")
 
@@ -48,31 +49,16 @@ class CanadianNationalParser(BaseParser):
         del xlsx_dicts[0]
 
         # get the date of report from the general dict
-        months = dict(
-            Jan=1,
-            Feb=2,
-            Mar=3,
-            Apr=4,
-            May=5,
-            Jun=6,
-            Jul=7,
-            Aug=8,
-            Sep=9,
-            Oct=10,
-            Nov=11,
-            Dec=12,
-        )
+        months = {}
+        for i, month in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")):
+            months[month] = i + 1
 
         date = xlsx_dicts[2][10].split(" ")
 
         day = date[6]
         year = date[7]
         month = date[3]
-        format_month = ""
-
-        for mon in months:
-            if mon == month:
-                format_month = months[mon]
+        format_month = months[month]
 
         format_day = int(re.findall(r"(\d+)", day)[0])
         format_year = int(re.findall(r"(\d+)", year)[0])

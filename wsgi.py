@@ -47,13 +47,15 @@ def scrap():
     """Scrapping all companies"""
     log(log.INFO, "Scrapper started")
     from app.controllers import (
-        CSXParser,
-        UnionParser,
-        # NorfolkSouthernParser,
+        # CSXParser,
+        # UnionParser,
+        # BNSFParser,
         # KansasCitySouthernParser,
-        # CanadianNationalParser,
+        CanadianNationalParser,
+
+        # NorfolkSouthernParser,
         # CanadianPacificParser,
-        BNSFParser,
+
     )
     from app.models import Passed
 
@@ -63,13 +65,15 @@ def scrap():
         for week in range(1, finish_week):
             log(log.INFO, "----------------Week %d", week)
             COMPANIES = {
-                CSXParser: "CSX",
-                UnionParser: "Union Parser",
-                # NorfolkSouthernParser: "Norfolk Southern",
+                # CSXParser: "CSX",
+                # UnionParser: "Union Parser",
+                # BNSFParser: "BNSF Parser",
                 # KansasCitySouthernParser: "Kansas City Southern Parser",
-                # CanadianNationalParser: "Canadian National Parser",
+                CanadianNationalParser: "Canadian National Parser",
+
+                # NorfolkSouthernParser: "Norfolk Southern",
                 # CanadianPacificParser: "CanadianPacificParser",
-                BNSFParser: "BNSF Parser",
+
             }
             for Parser, company_name in COMPANIES.items():
                 p = (
