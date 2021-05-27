@@ -23,13 +23,14 @@ def data_scrap():
         for week in range(1, finish_week):
             log(log.INFO, "----------------Week %d of %d", week, year)
             COMPANIES = {
-                CSXParser: "CSX",
+                # CSXParser: "CSX",
                 # UnionParser: "Union Parser",
                 # NorfolkSouthernParser: "Norfolk Southern",
                 # KansasCitySouthernParser: "Kansas City Southern Parser",
                 # CanadianNationalParser: "Canadian National Parser",
-                # CanadianPacificParser: "CanadianPacificParser",
                 # BNSFParser: "BNSF Parser",
+
+                CanadianPacificParser: "CanadianPacificParser",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (
@@ -52,4 +53,3 @@ def data_scrap():
                     time.sleep(5)
                 parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()
-                time.sleep(2)
