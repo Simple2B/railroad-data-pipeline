@@ -114,14 +114,14 @@ def test_bnsf_parser(client):
 
 
 def test_canadian_pacific_parser(client):
-    parser = CanadianPacificParser(2021, 2)
+    parser = CanadianPacificParser(2021, 21)
     with open(CANADIAN_PACIFIC_TEST_DATA_FILE, "rb") as file:
         parser.parse_data(file=file)
     # COMPANY_ID = "Canadian_Pacific_2021_2_1"
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
-    # parsed_data = Company.query.all()
-    # assert parsed_data
-    # assert len(parsed_data) == 5
+    parsed_data = Company.query.all()
+    assert parsed_data
+    assert len(parsed_data) == 5
 
 
 def test_norfolk_southern_parser(client):
