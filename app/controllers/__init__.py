@@ -20,7 +20,7 @@ def data_scrap():
     for year in range(conf.BEGIN_YEAR, conf.CURRENT_YEAR + 1):
         log(log.INFO, "----------------Year: %d", year)
         finish_week = conf.CURRENT_WEEK if year == conf.CURRENT_YEAR else 53
-        for week in range(1, finish_week):
+        for week in range(1, finish_week + 1):
             log(log.INFO, "----------------Week %d of %d", week, year)
             COMPANIES = {
                 # CSXParser: "CSX",
@@ -44,12 +44,15 @@ def data_scrap():
                     continue
                 log(log.INFO, "Start parser %s", company_name)
                 parser = Parser(year_no=year, week_no=week)
-                attempts = 3
-                while not parser.get_file():
-                    log(log.WARNING, "Cannot get data file. Sleep and try again...")
-                    attempts -= 1
-                    if attempts <= 0:
-                        assert False
-                    time.sleep(5)
+                file = parser.get_file()
+                if not file:
+                    log(log.WARNING, "Cannot get data file.")
+                # attempts = 3
+                # while not parser.get_file():
+                #     log(log.WARNING, "Cannot get data file. Sleep and try again...")
+                #     attempts -= 1
+                #     if attempts <= 0:
+                #         assert False
+                #     time.sleep(5)
                 parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()

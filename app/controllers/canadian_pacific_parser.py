@@ -1,5 +1,6 @@
-import re
+# import re
 import tempfile
+from dateparser.search import search_dates
 from datetime import datetime
 from urllib.request import urlopen
 import pandas as pd
@@ -8,7 +9,7 @@ from .base_parser import BaseParser
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from config import BaseConfig as conf
-from .carload_types import find_carload_id
+from .carload_types import find_carload_id, ALL_PROD_TYPES
 from app.models import Company
 from app.logger import log
 
@@ -51,7 +52,7 @@ class CanadianPacificParser(BaseParser):
         return None
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no)
         if file_url is None:
             return False
         file = urlopen(file_url)
@@ -63,94 +64,56 @@ class CanadianPacificParser(BaseParser):
 
     def parse_data(self, file=None):
         if not file:
-            file = self.file
-
-        if not self.file:
-            log(log.ERROR, "Nothing to parse, file is not found")
-            return None
+            self.file = file
+        # elif not self.file:
+        #     log(log.ERROR, "Nothing to parse, file is not found")
+        #     return None
 
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
-        xlsx_dicts = read_xlsx.to_dict(orient="dictionary_xlsx")
+        xlsx_dicts = read_xlsx.to_dict("records")
 
-        del xlsx_dicts[0]
+        data_dicts = []
 
-        xlsx_dicts_types = xlsx_dicts.pop(1)
+        xlsx_date = xlsx_dicts.pop(2)[1].replace("-", "")
 
-        # by type of carload value
-        data_dicts = {}
+        dates = search_dates(xlsx_date)
+        date = []
 
-        for j in xlsx_dicts_types:
-            values_dict = []
-            for index in xlsx_dicts:
-                for i in xlsx_dicts[index]:
-                    if j == i:
-                        values_dict.append(xlsx_dicts[index][i])
-            data_dicts.update({str(xlsx_dicts_types[j]): values_dict})
+        for x in dates[0]:
+            date.append(x)
 
-        del data_dicts["nan"]
-        del data_dicts["Revenue Ton Miles (in millions)"]
+        date = date[1]
+
+        for xlsx_dict in xlsx_dicts:
+            type_name = xlsx_dict[1]
+            if type_name and type_name in ALL_PROD_TYPES:
+                data_dicts.append(xlsx_dict)
 
         # list of all products
         products = {}
 
         for data in data_dicts:
-            if data != "nan":
-                products[data] = dict(
-                    week=dict(
-                        current_year=data_dicts[data][0],
-                        previous_year=data_dicts[data][1],
-                        chg=round(data_dicts[data][3] * 100, 1),
-                    ),
-                    QUARTER_TO_DATE=dict(
-                        current_year=data_dicts[data][5],
-                        previous_year=data_dicts[data][6],
-                        chg=round(data_dicts[data][8] * 100, 1),
-                    ),
-                    YEAR_TO_DATE=dict(
-                        current_year=data_dicts[data][10],
-                        previous_year=data_dicts[data][11],
-                        chg=round(data_dicts[data][13] * 100, 1),
-                    ),
-                )
-
-        # get the date of report from the general dict
-        months = dict(
-            Jan=1,
-            Feb=2,
-            Mar=3,
-            Apr=4,
-            May=5,
-            Jun=6,
-            Jul=7,
-            Aug=8,
-            Sep=9,
-            Oct=10,
-            Nov=11,
-            Dec=12,
-        )
-
-        products_keys = list(products.keys())
-        date = products_keys[0]
-
-        date_farmate = date.split(" ")
-        day = date_farmate[7]
-        year = date_farmate[8]
-        month = date_farmate[6]
-        format_month = ""
-
-        for mon in months:
-            if mon == month:
-                format_month = months[mon]
-
-        format_day = int(re.findall(r"(\d+)", day)[0])
-        format_year = int(re.findall(r"(\d+)", year)[0])
-
-        date_db = datetime(month=format_month, day=format_day, year=format_year)
+            products[data[1]] = dict(
+                week=dict(
+                    current_year=data[2],
+                    previous_year=data[3],
+                    chg=round(data[5] * 100, 1),
+                ),
+                QUARTER_TO_DATE=dict(
+                    current_year=data[12],
+                    previous_year=data[13],
+                    chg=round(data[15] * 100, 1),
+                ),
+                YEAR_TO_DATE=dict(
+                    current_year=data[17],
+                    previous_year=data[18],
+                    chg=round(data[20] * 100, 1),
+                ),
+            )
 
         # write data to the database
-        del products[products_keys[0]]
         for prod_name, product in products.items():
             company_id = ""
             carload_id = find_carload_id(prod_name)
@@ -173,7 +136,7 @@ class CanadianPacificParser(BaseParser):
                     YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
                     YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
                     - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=date_db,
+                    date=date,
                     week=self.week_no,
                     year=self.year_no,
                     company_name="Canadian National",

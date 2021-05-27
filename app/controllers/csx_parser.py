@@ -49,11 +49,11 @@ class CSXParser(BaseParser):
                 link = i["href"]
                 log(log.INFO, "Found pdf link: [%s]", link)
                 return link
-            log(log.WARNING, "Links not found")
-            return None
+        log(log.WARNING, "Links not found")
+        return None
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no)
         if not file_url:
             return False
         response = requests.get(file_url, stream=True)

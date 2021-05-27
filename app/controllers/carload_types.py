@@ -80,6 +80,10 @@ CARLOAD_TYPES = (
     {"ID": 22, "type": ["Waste and Scrap Materials", "Waste & Nonferrous Scrap"]},
 )
 
+ALL_PROD_TYPES = []
+for names in [i["type"] for i in CARLOAD_TYPES]:
+    ALL_PROD_TYPES += names
+
 
 def find_carload_id(prod_name):
     for carload in CARLOAD_TYPES:
