@@ -5,8 +5,12 @@ import pandas as pd
 from sqlalchemy import and_
 from urllib.request import urlopen
 from .base_parser import BaseParser
-from .carload_types import find_carload_id
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from config import BaseConfig as conf
 from app.logger import log
+from .carload_types import find_carload_id
+# from app.logger import log
 from app.models import Company
 
 
@@ -16,6 +20,28 @@ class CanadianNationalParser(BaseParser):
         self.week_no = week_no
         self.year_no = year_no
         self.file = None  # method get_file() store here file stream
+        self.links = None
+
+    def scrapper(self, week: int, year: int) -> str or None:
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")
+        browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+        browser.get(self.URL)
+        generated_html = browser.page_source
+        soup = BeautifulSoup(generated_html, "html.parser")
+        years_of_reports = soup.find_all('select', id="select1")
+        for year in years_of_reports:
+            if year:
+                links = soup.find_all('select', id="select2")
+                for i in links:
+                    scrap_data = i.text.split()
+                    scrap_week = scrap_data[1]
+                    if str(week) == scrap_week:
+                        return "https://www.cn.ca" + i['value']
+        log(log.WARNING, "Links not found")
+        return None
 
     def get_file(self) -> bool:
         if len(str(self.week_no)) == 1:
