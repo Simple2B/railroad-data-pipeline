@@ -12,6 +12,7 @@ WTForms
 bs4
 
 PyPDF2
+pdf-tools
 datefinder
 pandas
 xlrd==1.2.0
