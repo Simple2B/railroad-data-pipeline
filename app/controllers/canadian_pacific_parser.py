@@ -51,7 +51,7 @@ class CanadianPacificParser(BaseParser):
         return None
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no)
         if file_url is None:
             return False
         file = urlopen(file_url)

@@ -36,15 +36,21 @@ class KansasCitySouthernParser(BaseParser):
         soup = BeautifulSoup(generated_html, "html.parser")
         links = soup.find_all("a", class_="ext-link")
         for i in links:
-            scrap_data = i.text.split()
-            scrap_week = scrap_data[1]
-            if str(week) == scrap_week:
-                return "https://investors.kcsouthern.com" + i["href"]
+            if len(str(week)) == 1:
+                week = f"0{week}"
+            scrap_data = i.attrs["href"].split("/")[6]
+            scrap_date = scrap_data.split("-")
+            scrap_week = scrap_date[1]
+            scrap_year = scrap_date[4]
+            if str(week) == scrap_week and str(year) == scrap_year:
+                link = "https://investors.kcsouthern.com" + i.attrs["href"]
+                log(log.INFO, "Found pdf link: [%s]", link)
+                return link
         log(log.WARNING, "Links not found")
         return None
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no)
         if file_url is None:
             return False
         file = urlopen(file_url)

@@ -1,13 +1,11 @@
-import re
-from datetime import datetime
+# import re
+# from datetime import datetime
+from dateparser.search import search_dates
 import tempfile
 import pandas as pd
 from sqlalchemy import and_
 from urllib.request import urlopen
 from .base_parser import BaseParser
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from config import BaseConfig as conf
 from app.logger import log
 from .carload_types import find_carload_id
 from app.models import Company
@@ -19,36 +17,13 @@ class CanadianNationalParser(BaseParser):
         self.week_no = week_no
         self.year_no = year_no
         self.file = None  # method get_file() store here file stream
-        self.links = None
-
-    def scrapper(self, week: int, year: int) -> str or None:
-        links = self.links
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--headless")
-        browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
-        browser.get(self.URL)
-        generated_html = browser.page_source
-        soup = BeautifulSoup(generated_html, "html.parser")
-        years_of_reports = soup.find_all('select', id="select1")
-        for year in years_of_reports:
-            if year:
-                links = soup.find_all('select', id="select2")
-                for i in links:
-                    scrap_data = i.text.split()
-                    scrap_week = scrap_data[1]
-                    if str(week) == scrap_week:
-                        return "https://www.cn.ca" + i['value']
-        log(log.WARNING, "Links not found")
-        return None
 
     def get_file(self) -> bool:
-        if len(str(self.week_no)) == 1:
-            week = f"0{self.week_no}"
-        else:
-            week = self.week_no
-        file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{int(week) - 1}.xlsx"  # noqa E501
+        # if len(str(self.week_no)) == 1:
+        #     week = f"0{self.week_no}"
+        # else:
+        #     week = self.week_no
+        file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{int(self.week_no) - 1}.xlsx"  # noqa E501
         file = urlopen(file_url)
         if file.url == 'https://www.cn.ca/404':
             log(log.ERROR, "File is not found.")
@@ -64,6 +39,10 @@ class CanadianNationalParser(BaseParser):
         if not file:
             file = self.file
 
+        if not self.file:
+            log(log.ERROR, "Nothing to parse, file is not found")
+            return None
+
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
         read_xlsx = pd.read_excel(file_xlsx, header=None)
@@ -77,17 +56,28 @@ class CanadianNationalParser(BaseParser):
         for i, month in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")):
             months[month] = i + 1
 
-        date = xlsx_dicts[2][10].split(" ")
+        date_string = xlsx_dicts[2][10].replace("-", " ")
 
-        day = date[6]
-        year = date[7]
-        month = date[3]
-        format_month = months[month]
+        dates = search_dates(date_string)
+        date = []
 
-        format_day = int(re.findall(r"(\d+)", day)[0])
-        format_year = int(re.findall(r"(\d+)", year)[0])
+        for x in dates[0]:
+            date.append(x)
 
-        format_date = datetime(month=format_month, day=format_day, year=format_year)
+        date = date[1]
+
+        # date = xlsx_dicts[2][10].split(" ")
+
+        # day = date[-2]
+        # year = date[-1]
+        # month = date[-3]
+        # format_month = months[month]
+
+        # format_day = int(re.findall(r"(\d+)", day)[0])
+        # format_year = int(re.findall(r"(\d+)", year)[0])
+
+        # format_date = datetime(month=format_month, day=format_day, year=format_year)
+
         xlsx_dicts_types = xlsx_dicts.pop(1)
 
         # by type of carload value
@@ -145,7 +135,7 @@ class CanadianNationalParser(BaseParser):
                     YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
                     YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
                     - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=format_date,
+                    date=date[1],
                     week=self.week_no,
                     year=self.year_no,
                     company_name="Canadian National",

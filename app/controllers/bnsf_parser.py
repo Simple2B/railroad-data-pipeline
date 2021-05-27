@@ -58,7 +58,7 @@ class BNSFParser(BaseParser):
         return None
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no)
         if not file_url:
             log(log.ERROR, "File URL is not found.")
             return False
