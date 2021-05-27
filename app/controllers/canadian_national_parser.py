@@ -10,7 +10,6 @@ from selenium import webdriver
 from config import BaseConfig as conf
 from app.logger import log
 from .carload_types import find_carload_id
-# from app.logger import log
 from app.models import Company
 
 
@@ -23,6 +22,7 @@ class CanadianNationalParser(BaseParser):
         self.links = None
 
     def scrapper(self, week: int, year: int) -> str or None:
+        links = self.links
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")

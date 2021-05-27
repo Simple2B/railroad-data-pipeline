@@ -5,7 +5,10 @@ from urllib.request import urlopen
 from sqlalchemy import and_
 from datetime import datetime
 import PyPDF2
-from .scrapper import scrapper
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from config import BaseConfig as conf
+from app.logger import log
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
 from app.models import Company
@@ -17,11 +20,31 @@ class KansasCitySouthernParser(BaseParser):
         self.week_no = week_no
         self.year_no = year_no
         self.file = None  # method get_file() store here file stream
+        self.links = None
+
+    def scrapper(self, week: int, year: int) -> str or None:
+        links = self.links
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")
+        browser = webdriver.Chrome(
+            options=options, executable_path=conf.CHROME_DRIVER_PATH
+        )
+        browser.get(self.URL)
+        generated_html = browser.page_source
+        soup = BeautifulSoup(generated_html, "html.parser")
+        links = soup.find_all("a", class_="ext-link")
+        for i in links:
+            scrap_data = i.text.split()
+            scrap_week = scrap_data[1]
+            if str(week) == scrap_week:
+                return "https://investors.kcsouthern.com" + i["href"]
+        log(log.WARNING, "Links not found")
+        return None
 
     def get_file(self) -> bool:
-        file_url = scrapper(
-            "kansas_city_southern", self.week_no, self.year_no, self.URL
-        )
+        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
         if file_url is None:
             return False
         file = urlopen(file_url)

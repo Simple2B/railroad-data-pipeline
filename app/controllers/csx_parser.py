@@ -3,15 +3,10 @@ import tempfile
 import datefinder
 import requests
 from datetime import datetime
-# import time
 from pdfreader import SimplePDFViewer
 from bs4 import BeautifulSoup
 from selenium import webdriver
-
-# import PyPDF2
-# from urllib.request import urlopen
 from sqlalchemy import and_
-from .scrapper import scrapper
 from .carload_types import find_carload_id
 from .base_parser import BaseParser
 from app.logger import log
@@ -39,12 +34,12 @@ class CSXParser(BaseParser):
             generated_html = browser.page_source
             soup = BeautifulSoup(generated_html, "html.parser")
             links = soup.find_all("a", class_="module_link")
-            # while len(links) < 53:
-            #     browser.get(self.URL)
-            #     generated_html = browser.page_source
-            #     soup = BeautifulSoup(generated_html, "html.parser")
-            #     links = soup.find_all("a", class_="module_link")
-            #     time.sleep(1)
+            while len(links) < 53:
+                browser.get(self.URL)
+                generated_html = browser.page_source
+                soup = BeautifulSoup(generated_html, "html.parser")
+                links = soup.find_all("a", class_="module_link")
+                self.file.time.sleep(1)
             self.links = links
         for i in links:
             scrap_data = i.span.text.split()
@@ -58,7 +53,7 @@ class CSXParser(BaseParser):
             return None
 
     def get_file(self) -> bool:
-        file_url = scrapper("csx", self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
         if not file_url:
             return False
         response = requests.get(file_url, stream=True)

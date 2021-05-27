@@ -6,7 +6,6 @@ import datefinder
 import requests
 from .base_parser import BaseParser, get_int_val
 from pdfreader import SimplePDFViewer
-from .scrapper import scrapper
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from config import BaseConfig as conf
@@ -25,6 +24,7 @@ class UnionParser(BaseParser):
         self.links = None
 
     def scrapper(self, week: int, year: int) -> str or None:
+        links = self.links
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -45,7 +45,7 @@ class UnionParser(BaseParser):
         return None
 
     def get_file(self) -> bool:
-        file_url = scrapper('union', self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
         if not file_url:
             return False
         requests.packages.urllib3.disable_warnings()

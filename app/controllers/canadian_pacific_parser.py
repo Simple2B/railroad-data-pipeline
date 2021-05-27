@@ -5,7 +5,9 @@ from urllib.request import urlopen
 import pandas as pd
 from sqlalchemy import and_
 from .base_parser import BaseParser
-from .scrapper import scrapper
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from config import BaseConfig as conf
 from .carload_types import find_carload_id
 from app.models import Company
 from app.logger import log
@@ -17,9 +19,39 @@ class CanadianPacificParser(BaseParser):
         self.week_no = week_no
         self.year_no = year_no
         self.file = None  # method get_file() store here file stream
+        self.link = None
+
+    def scrapper(self, week: int, year: int) -> str or None:
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")
+        browser = webdriver.Chrome(
+            options=options, executable_path=conf.CHROME_DRIVER_PATH
+        )
+        browser.get(self.URL)
+        generated_html = browser.page_source
+        soup = BeautifulSoup(generated_html, "html.parser")
+        tags = soup.find_all("a", class_="button-link")
+        while len(tags) != 2:
+            browser.get(self.URL)
+            generated_html = browser.page_source
+            soup = BeautifulSoup(generated_html, "html.parser")
+            tags = soup.find_all("a", class_="button-link")
+            self.file.sleep(1)
+        link = tags[0].attrs["href"]
+        date = link.split("/")
+        scrap_week = datetime(
+            year=int(date[6]), month=int(date[7]), day=int(date[8])
+        ).isocalendar()[1]
+        if week == scrap_week and int(date[6]) == year:
+            log(log.INFO, "Found pdf link: [%s]", link)
+            return link
+        log(log.WARNING, "Links not found")
+        return None
 
     def get_file(self) -> bool:
-        file_url = scrapper("canadian_pacific", self.week_no, self.year_no, self.URL)
+        file_url = self.scrapper(self.week_no, self.year_no, self.URL)
         if file_url is None:
             return False
         file = urlopen(file_url)

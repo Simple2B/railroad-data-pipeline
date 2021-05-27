@@ -27,10 +27,10 @@ def data_scrap():
                 # UnionParser: "Union Parser",
                 # NorfolkSouthernParser: "Norfolk Southern",
                 # KansasCitySouthernParser: "Kansas City Southern Parser",
-                CanadianNationalParser: "Canadian National Parser",
+                # CanadianNationalParser: "Canadian National Parser",
                 # BNSFParser: "BNSF Parser",
 
-                # CanadianPacificParser: "CanadianPacificParser",
+                CanadianPacificParser: "CanadianPacificParser",
             }
             for Parser, company_name in COMPANIES.items():
                 p = (
