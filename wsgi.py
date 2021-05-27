@@ -1,4 +1,5 @@
 #!/user/bin/env python
+from flask_mail import Mail, Message
 import click
 
 from app import create_app, db, models
@@ -7,6 +8,7 @@ from app.controllers import data_scrap
 
 
 app = create_app()
+mail = Mail(app)
 
 
 # flask cli context setup
@@ -43,9 +45,11 @@ def scrap():
     log(log.INFO, "Scrapper started")
     try:
         data_scrap()
-    except Exception as e:
+    except Exception as err:
         # TODO: collect error data and send email
-        assert e
+        msg = Message(err, sender="from@example.com", recipients=["to@example.com"])
+        msg
+        assert err
 
 
 if __name__ == "__main__":
