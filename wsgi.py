@@ -1,14 +1,16 @@
 #!/user/bin/env python
-from flask_mail import Mail, Message
 import click
 
-from app import create_app, db, models
+from flask_mail import Message
+from app import create_app, db, models, mail
 from app.logger import log
 from app.controllers import data_scrap
 
 
 app = create_app()
-mail = Mail(app)
+
+
+# app.config.from_pyfile("config.cfg")
 
 
 # flask cli context setup
@@ -47,9 +49,9 @@ def scrap():
         data_scrap()
     except Exception as err:
         # TODO: collect error data and send email
-        msg = Message(err, sender="from@example.com", recipients=["to@example.com"])
-        msg
-        assert err
+        msg = Message(err, sender="", recipients=[""])
+        mail.send(msg)
+        assert msg
 
 
 if __name__ == "__main__":

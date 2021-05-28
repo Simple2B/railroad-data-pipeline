@@ -23,6 +23,16 @@ class BaseConfig(object):
     CURRENT_YEAR = datetime.datetime.now().year
     CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "email-smtp.us-east-2.amazonaws.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+    # MAIL_DEBUG =
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "AKIARBQLSALC7H5MZJ5D")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "BGh4folV6Gr0o4r7gjD8zqn9FPM9Ew0LrEBh0HwEnEKC")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "simple2b.mailer@gmail.com")
+    MAIL_ASCII_ATTACHMENTS = False
+
     @staticmethod
     def configure(app):
         # Implement this method to do further configuration on your app.
