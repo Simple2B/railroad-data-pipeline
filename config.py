@@ -29,9 +29,7 @@ class BaseConfig(object):
     MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", "N") in ("Y", "y", "yes", "Yes")
     # MAIL_DEBUG =
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "unknown_user")
-    MAIL_PASSWORD = os.environ.get(
-        "MAIL_PASSWORD", "no password"
-    )
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "no password")
     MAIL_DEFAULT_SENDER = os.environ.get(
         "MAIL_DEFAULT_SENDER", "simple2b.mailer@gmail.com"
     )
