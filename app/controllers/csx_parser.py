@@ -3,6 +3,7 @@ import tempfile
 import datefinder
 import requests
 from datetime import datetime
+import time
 from pdfreader import SimplePDFViewer
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -39,7 +40,7 @@ class CSXParser(BaseParser):
                 generated_html = browser.page_source
                 soup = BeautifulSoup(generated_html, "html.parser")
                 links = soup.find_all("a", class_="module_link")
-                self.file.time.sleep(1)
+                time.sleep(1)
             self.links = links
         for i in links:
             scrap_data = i.span.text.split()

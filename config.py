@@ -36,6 +36,7 @@ class BaseConfig(object):
         "MAIL_DEFAULT_SENDER", "simple2b.mailer@gmail.com"
     )
     MAIL_ASCII_ATTACHMENTS = False
+    MAIL_RECIPIENTS = os.environ.get("MAIL_RECIPIENTS", "simple2b.info@gmail.com")
 
     @staticmethod
     def configure(app):
@@ -62,6 +63,7 @@ class TestingConfig(BaseConfig):
         "TEST_DATABASE_URL",
         "sqlite:///" + os.path.join(base_dir, "database-test.sqlite3"),
     )
+    MAIL_SUPPRESS_SEND = True
 
 
 class ProductionConfig(BaseConfig):
