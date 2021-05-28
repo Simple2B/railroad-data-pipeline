@@ -46,8 +46,11 @@ def run_scrap():
     try:
         data_scrap()
     except Exception as err:
-        # TODO: collect error data and send email
-        msg = Message(subject="Error", body=str(err), recipients=conf.MAIL_RECIPIENTS.split(";"))
+        # send email on error
+        import traceback
+        body = f"Error {str(err)}\n"
+        body += traceback.format_exc()
+        msg = Message(subject="Error", body=body, recipients=conf.MAIL_RECIPIENTS.split(";"))
         log(log.INFO, "Mail sending...")
         with open(f"{LOGGER_NAME}.log", "r") as att:
             msg.attach(att.name, "text/plain", att.read())
