@@ -2,10 +2,12 @@ import os
 
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from werkzeug.exceptions import HTTPException
 
 # instantiate extensions
 db = SQLAlchemy()
+mail = Mail()
 
 
 def create_app(environment="development"):
@@ -25,6 +27,7 @@ def create_app(environment="development"):
 
     # Set up extensions.
     db.init_app(app)
+    mail.init_app(app)
 
     # Register blueprints.
     app.register_blueprint(companies_blueprint)

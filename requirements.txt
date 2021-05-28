@@ -2,6 +2,8 @@ click
 # pycopy-copy
 Flask
 Flask-SQLAlchemy
+Flask-Mail
+flask_mail
 itsdangerous
 Jinja2
 MarkupSafe

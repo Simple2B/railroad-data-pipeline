@@ -23,6 +23,19 @@ class BaseConfig(object):
     CURRENT_YEAR = datetime.datetime.now().year
     CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "unknown_server")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "Y") in ("Y", "y", "yes", "Yes")
+    MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", "N") in ("Y", "y", "yes", "Yes")
+    # MAIL_DEBUG =
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "unknown_user")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "no password")
+    MAIL_DEFAULT_SENDER = os.environ.get(
+        "MAIL_DEFAULT_SENDER", "simple2b.mailer@gmail.com"
+    )
+    MAIL_ASCII_ATTACHMENTS = False
+    MAIL_RECIPIENTS = os.environ.get("MAIL_RECIPIENTS", "simple2b.info@gmail.com")
+
     @staticmethod
     def configure(app):
         # Implement this method to do further configuration on your app.
@@ -48,6 +61,7 @@ class TestingConfig(BaseConfig):
         "TEST_DATABASE_URL",
         "sqlite:///" + os.path.join(base_dir, "database-test.sqlite3"),
     )
+    MAIL_SUPPRESS_SEND = True
 
 
 class ProductionConfig(BaseConfig):

@@ -1,12 +1,17 @@
 #!/user/bin/env python
 import click
 
-from app import create_app, db, models
-from app.logger import log
+from flask_mail import Message
+from app import create_app, db, models, mail
+from app.logger import log, LOGGER_NAME
 from app.controllers import data_scrap
+from config import BaseConfig as conf
 
 
 app = create_app()
+
+
+# app.config.from_pyfile("config.cfg")
 
 
 # flask cli context setup
@@ -37,15 +42,24 @@ def reset_db():
     db.create_all()
 
 
+def run_scrap():
+    try:
+        data_scrap()
+    except Exception as err:
+        # TODO: collect error data and send email
+        msg = Message(subject="Error", body=str(err), recipients=conf.MAIL_RECIPIENTS.split(";"))
+        log(log.INFO, "Mail sending...")
+        with open(f"{LOGGER_NAME}.log", "r") as att:
+            msg.attach(att.name, "text/plain", att.read())
+        mail.send(msg)
+        assert msg
+
+
 @app.cli.command()
 def scrap():
     """Scrapping all companies"""
     log(log.INFO, "Scrapper started")
-    try:
-        data_scrap()
-    except Exception as e:
-        # TODO: collect error data and send email
-        assert e
+    run_scrap()
 
 
 if __name__ == "__main__":
