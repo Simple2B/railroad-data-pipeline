@@ -2,6 +2,7 @@
 import tempfile
 from dateparser.search import search_dates
 from datetime import datetime
+import time
 from urllib.request import urlopen
 import pandas as pd
 from sqlalchemy import and_
@@ -39,7 +40,7 @@ class CanadianPacificParser(BaseParser):
             generated_html = browser.page_source
             soup = BeautifulSoup(generated_html, "html.parser")
             tags = soup.find_all("a", class_="button-link")
-            self.file.sleep(1)
+            time.sleep(1)
         link = tags[0].attrs["href"]
         date = link.split("/")
         scrap_week = datetime(
@@ -64,7 +65,7 @@ class CanadianPacificParser(BaseParser):
 
     def parse_data(self, file=None):
         if not file:
-            self.file = file
+            file = self.file
         # elif not self.file:
         #     log(log.ERROR, "Nothing to parse, file is not found")
         #     return None
