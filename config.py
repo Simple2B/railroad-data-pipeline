@@ -23,14 +23,14 @@ class BaseConfig(object):
     CURRENT_YEAR = datetime.datetime.now().year
     CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 
-    MAIL_SERVER = os.environ.get("MAIL_SERVER", "email-smtp.us-east-2.amazonaws.com")
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "unknown_server")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
-    MAIL_USE_TLS = True
-    MAIL_USE_SSL = False
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "Y") in ("Y", "y", "yes", "Yes")
+    MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", "N") in ("Y", "y", "yes", "Yes")
     # MAIL_DEBUG =
-    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "AKIARBQLSALC7H5MZJ5D")
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "unknown_user")
     MAIL_PASSWORD = os.environ.get(
-        "MAIL_PASSWORD", "BGh4folV6Gr0o4r7gjD8zqn9FPM9Ew0LrEBh0HwEnEKC"
+        "MAIL_PASSWORD", "no password"
     )
     MAIL_DEFAULT_SENDER = os.environ.get(
         "MAIL_DEFAULT_SENDER", "simple2b.mailer@gmail.com"
