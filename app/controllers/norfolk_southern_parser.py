@@ -31,7 +31,9 @@ class NorfolkSouthernParser(BaseParser):
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--headless")
-            browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+            browser = webdriver.Chrome(
+                options=options, executable_path=conf.CHROME_DRIVER_PATH
+            )
             log(log.INFO, "Start get url Norfolk Southern")
             browser.get(self.URL)
             log(log.INFO, "Get url Norfolk Southern")
@@ -190,9 +192,11 @@ class NorfolkSouthernParser(BaseParser):
                 for prod_name, product in prod.items():
                     company_id = ""
                     carload_id = find_carload_id(prod_name)
-                    prod_year = product['date']['year_num']
-                    prod_week = product['date']['week_num']
-                    company_id = f"Norfolk_Southern_{prod_year}_{prod_week}_{carload_id}"
+                    prod_year = product["date"]["year_num"]
+                    prod_week = product["date"]["week_num"]
+                    company_id = (
+                        f"Norfolk_Southern_{prod_year}_{prod_week}_{carload_id}"
+                    )
                     date = datetime(
                         month=int(product["date"]["month_num"]),
                         day=int(product["date"]["day_num"]),

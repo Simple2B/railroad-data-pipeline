@@ -30,7 +30,7 @@ class CanadianNationalParser(BaseParser):
             week = "%20" + str(week)
         file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{week}.xlsx"  # noqa E501
         file = urlopen(file_url)
-        if file.url == 'https://www.cn.ca/404':
+        if file.url == "https://www.cn.ca/404":
             log(log.ERROR, "File is not found.")
             return None
         log(log.INFO, "Found pdf link: [%s]", file_url)

@@ -32,7 +32,9 @@ class UnionParser(BaseParser):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--headless")
-        browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+        browser = webdriver.Chrome(
+            options=options, executable_path=conf.CHROME_DRIVER_PATH
+        )
         log(log.INFO, "Start get url Union")
         browser.get(self.URL)
         log(log.INFO, "Got url Union")
@@ -52,7 +54,7 @@ class UnionParser(BaseParser):
         if not file_url:
             return False
         requests.packages.urllib3.disable_warnings()
-        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+        requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
         file = requests.get(file_url, stream=True)
         file.raise_for_status()
         self.file = tempfile.NamedTemporaryFile(mode="wb+")

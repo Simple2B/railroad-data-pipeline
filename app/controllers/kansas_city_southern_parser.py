@@ -136,4 +136,7 @@ class KansasCitySouthernParser(BaseParser):
                     company_name="Kansas City Southern",
                     product_type=prod_name,
                 ).save()
-        log(log.INFO, "-------- Write data to the database Kansas City Southern --------")
+        log(
+            log.INFO,
+            "-------- Write data to the database Kansas City Southern --------",
+        )
