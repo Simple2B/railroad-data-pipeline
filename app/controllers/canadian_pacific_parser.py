@@ -69,14 +69,13 @@ class CanadianPacificParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
-        # elif not self.file:
-        #     log(log.ERROR, "Nothing to parse, file is not found")
-        #     return None
 
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
+        log(log.INFO, "--------Read xlsx file Canadian Pacific--------")
         read_xlsx = pd.read_excel(file_xlsx, header=None)
         xlsx_dicts = read_xlsx.to_dict("records")
+        log(log.INFO, "--------Get xlsx text Canadian Pacific--------")
 
         data_dicts = []
 
@@ -143,6 +142,7 @@ class CanadianPacificParser(BaseParser):
                     date=date,
                     week=self.week_no,
                     year=self.year_no,
-                    company_name="Canadian National",
+                    company_name="Canadian Pacific",
                     product_type=prod_name,
                 ).save()
+        log(log.INFO, "-------- Write data to the database Canadian Pacific --------")

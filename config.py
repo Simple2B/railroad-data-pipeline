@@ -19,7 +19,7 @@ class BaseConfig(object):
 
     CHROME_DRIVER_PATH = os.environ.get("CHROME_DRIVER_PATH", None)
 
-    BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2021"))
+    BEGIN_YEAR = int(os.environ.get("BEGIN_YEAR", "2020"))
     CURRENT_YEAR = datetime.datetime.now().year
     CURRENT_WEEK = datetime.datetime.now().date().isocalendar()[1]
 

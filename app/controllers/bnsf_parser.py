@@ -78,9 +78,10 @@ class BNSFParser(BaseParser):
             file = self.file
 
         pdf_reader = PyPDF2.PdfFileReader(file)
-
+        log(log.INFO, "--------Read pdf file BNSF--------")
         page = pdf_reader.getPage(0)
         pdf_text = page.extractText()
+        log(log.INFO, "--------Get pdf text BNSF--------")
 
         # remove spaces from the text that we read from the pdf file
         format_text = re.sub("\n", " ", pdf_text)
@@ -181,3 +182,4 @@ class BNSFParser(BaseParser):
                     company_name="BNSF",
                     product_type=prod_name,
                 ).save()
+        log(log.INFO, "-------- Write data to the database BNSF --------")

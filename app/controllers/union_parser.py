@@ -65,10 +65,12 @@ class UnionParser(BaseParser):
         if not file:
             file = self.file
         text_pdf = self.pdf2text(file)
+        log(log.INFO, "--------Read pdf file Union--------")
         if not text_pdf:
             viewer = SimplePDFViewer(file)
             for canvas in viewer:
                 text_pdf += "".join(canvas.strings)
+        log(log.INFO, "--------Get pdf text Union--------")
 
         matches = datefinder.find_dates(text_pdf)
 
@@ -150,3 +152,4 @@ class UnionParser(BaseParser):
                     company_name="UNION",
                     product_type=prod_name,
                 ).save()
+        log(log.INFO, "-------- Write data to the database UNION --------")

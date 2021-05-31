@@ -69,9 +69,11 @@ class KansasCitySouthernParser(BaseParser):
         pdf_text = ""
         # reads each of the pdf pages
         pdf_reader = PyPDF2.PdfFileReader(file)
+        log(log.INFO, "--------Read pdf file Kansas City--------")
         for page_number in range(pdf_reader.numPages):
             page = pdf_reader.getPage(page_number)
             pdf_text += page.extractText()
+        log(log.INFO, "--------Get pdf text Kansas City--------")
 
         # remove spaces from the text that we read from the pdf file
         format_text = re.sub("\n", " ", pdf_text)
@@ -134,3 +136,4 @@ class KansasCitySouthernParser(BaseParser):
                     company_name="Kansas City Southern",
                     product_type=prod_name,
                 ).save()
+        log(log.INFO, "-------- Write data to the database Kansas City Southern --------")
