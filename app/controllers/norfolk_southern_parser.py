@@ -22,25 +22,30 @@ class NorfolkSouthernParser(BaseParser):
         self.link = None
 
     def scrapper(self, week: int, year: int) -> str or None:
-        link = self.link
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--headless")
-        browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
-        browser.get(self.URL)
-        generated_html = browser.page_source
-        soup = BeautifulSoup(generated_html, "html.parser")
-        tags = soup.find_all("a")
-        link = [
-            link.attrs["href"]
-            for link in tags
-            if "weekly-performance-reports/AAR_Categories" in link.attrs["href"]
-        ]
         time = datetime.now()
         scrap_week = time.isocalendar()[1]
         scrap_year = time.isocalendar()[0]
         if week == scrap_week and scrap_year == year:
+            link = self.link
+            options = webdriver.ChromeOptions()
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--headless")
+            browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+            log(log.INFO, "Start get url Norfolk Southern")
+            browser.get(self.URL)
+            log(log.INFO, "Get url Norfolk Southern")
+            generated_html = browser.page_source
+            soup = BeautifulSoup(generated_html, "html.parser")
+            tags = soup.find_all("a")
+            log(log.INFO, "Get all links Norfolk Southern")
+            link = [
+                link.attrs["href"]
+                for link in tags
+                if "weekly-performance-reports/AAR_Categories" in link.attrs["href"]
+            ]
+            log(log.INFO, "Get link with pdf for Norfolk Southern")
+
             link = "http://www.nscorp.com" + link[0]
             log(log.INFO, "Found pdf link: [%s]", link)
             return link
@@ -66,11 +71,13 @@ class NorfolkSouthernParser(BaseParser):
         # reads each of the pdf pages
         pages_text = []
         pdf_reader = PyPDF2.PdfFileReader(file)
+        log(log.INFO, "--------Read pdf file Norfolk Southern--------")
         for page_number in range(pdf_reader.numPages):
             page = pdf_reader.getPage(page_number)
             pdf_text = page.extractText()
             pages_text.append(pdf_text)
 
+        log(log.INFO, "--------Get pdf text Norfolk Southern--------")
         all_text = []
 
         # format text on all pages
@@ -219,3 +226,4 @@ class NorfolkSouthernParser(BaseParser):
                             company_name="Nortfolk Southern",
                             product_type=prod_name,
                         ).save()
+        log(log.INFO, "-------- Write data to the database Norfolk Southern --------")

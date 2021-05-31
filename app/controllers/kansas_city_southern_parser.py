@@ -31,7 +31,9 @@ class KansasCitySouthernParser(BaseParser):
         browser = webdriver.Chrome(
             options=options, executable_path=conf.CHROME_DRIVER_PATH
         )
+        log(log.INFO, "Start get url Kansas City")
         browser.get(self.URL)
+        log(log.INFO, "Got url Kansas City")
         generated_html = browser.page_source
         soup = BeautifulSoup(generated_html, "html.parser")
         links = soup.find_all("a", class_="ext-link")

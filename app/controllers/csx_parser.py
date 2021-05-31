@@ -31,7 +31,9 @@ class CSXParser(BaseParser):
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--headless")
             browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+            log(log.INFO, "Start get url CSX")
             browser.get(self.URL)
+            log(log.INFO, "Got url CSX")
             generated_html = browser.page_source
             soup = BeautifulSoup(generated_html, "html.parser")
             links = soup.find_all("a", class_="module_link")

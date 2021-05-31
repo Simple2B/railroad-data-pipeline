@@ -24,6 +24,9 @@ class CanadianPacificParser(BaseParser):
         self.link = None
 
     def scrapper(self, week: int, year: int) -> str or None:
+        if conf.CURRENT_WEEK - 1 != week or conf.CURRENT_YEAR != year:
+            log(log.WARNING, "Links not found")
+            return None
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -31,7 +34,9 @@ class CanadianPacificParser(BaseParser):
         browser = webdriver.Chrome(
             options=options, executable_path=conf.CHROME_DRIVER_PATH
         )
+        log(log.INFO, "Start get url Canadian Pacific")
         browser.get(self.URL)
+        log(log.INFO, "Got url Canadian Pacific")
         generated_html = browser.page_source
         soup = BeautifulSoup(generated_html, "html.parser")
         tags = soup.find_all("a", class_="button-link")
@@ -49,8 +54,6 @@ class CanadianPacificParser(BaseParser):
         if week == scrap_week and int(date[6]) == year:
             log(log.INFO, "Found pdf link: [%s]", link)
             return link
-        log(log.WARNING, "Links not found")
-        return None
 
     def get_file(self) -> bool:
         file_url = self.scrapper(self.week_no, self.year_no)

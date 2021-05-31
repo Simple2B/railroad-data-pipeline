@@ -24,13 +24,18 @@ class UnionParser(BaseParser):
         self.links = None
 
     def scrapper(self, week: int, year: int) -> str or None:
+        if conf.CURRENT_YEAR != year:
+            log(log.WARNING, "Links not found")
+            return None
         links = self.links
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--headless")
         browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+        log(log.INFO, "Start get url Union")
         browser.get(self.URL)
+        log(log.INFO, "Got url Union")
         generated_html = browser.page_source
         soup = BeautifulSoup(generated_html, "html.parser")
         links = soup.find_all("a", class_="pdf")
@@ -41,8 +46,6 @@ class UnionParser(BaseParser):
                 link = "https://www.up.com" + i["href"]
                 log(log.INFO, "Found pdf link: [%s]", link)
                 return link
-        log(log.WARNING, "Links not found")
-        return None
 
     def get_file(self) -> bool:
         file_url = self.scrapper(self.week_no, self.year_no)

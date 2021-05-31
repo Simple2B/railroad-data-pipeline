@@ -45,14 +45,16 @@ def data_scrap():
                 parser = Parser(year_no=year, week_no=week)
                 file = parser.get_file()
                 if not file:
-                    log(log.WARNING, "Cannot get data file. FOR YEAR:%s WEEK:%s", year, week)
-                    continue
-                # attempts = 3
-                # while not parser.get_file():
-                #     log(log.WARNING, "Cannot get data file. Sleep and try again...")
-                #     attempts -= 1
-                #     if attempts <= 0:
-                #         assert False
-                #     time.sleep(5)
-                parser.parse_data()
+                    log(
+                        log.WARNING,
+                        "Cannot get data file. FOR YEAR:%s WEEK:%s",
+                        year,
+                        week,
+                    )
+                    if conf.CURRENT_YEAR == year and (
+                        conf.CURRENT_WEEK == week or conf.CURRENT_WEEK == week + 1
+                    ):
+                        continue
+                else:
+                    parser.parse_data()
                 Passed(company_name=company_name, year=year, week=week).save()

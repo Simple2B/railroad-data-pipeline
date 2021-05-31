@@ -60,5 +60,4 @@ class BaseParser:
 
 
 def get_int_val(val: str) -> int:
-    print(val)
     return int(val.replace(",", ""))
