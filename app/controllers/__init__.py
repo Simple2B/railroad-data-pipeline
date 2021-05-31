@@ -14,10 +14,10 @@ def data_scrap():
     from app.logger import log
 
     for year in range(conf.BEGIN_YEAR, conf.CURRENT_YEAR + 1):
-        log(log.INFO, "----------------Year: %d", year)
+        log(log.INFO, "=================== Year: %d", year)
         finish_week = conf.CURRENT_WEEK if year == conf.CURRENT_YEAR else 53
         for week in range(1, finish_week + 1):
-            log(log.INFO, "----------------Week %d of %d", week, year)
+            log(log.INFO, "=================== Week %d of %d", week, year)
             COMPANIES = {
                 CSXParser: "CSX",
                 UnionParser: "Union Parser",
@@ -37,7 +37,7 @@ def data_scrap():
                 if p:
                     log(log.INFO, "Already done for [%s]", company_name)
                     continue
-                log(log.INFO, "Start parser %s", company_name)
+                log(log.INFO, "----------- Start parser %s", company_name)
                 parser = Parser(year_no=year, week_no=week)
                 file = parser.get_file()
                 log(log.INFO, "Got file %s", company_name)
