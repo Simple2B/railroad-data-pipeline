@@ -40,6 +40,7 @@ def data_scrap():
                 log(log.INFO, "Start parser %s", company_name)
                 parser = Parser(year_no=year, week_no=week)
                 file = parser.get_file()
+                log(log.INFO, "Got file %s", company_name)
                 if not file:
                     log(
                         log.WARNING,
@@ -53,4 +54,5 @@ def data_scrap():
                         continue
                 else:
                     parser.parse_data()
+                    log(log.INFO, "End parser data %s", company_name)
                 Passed(company_name=company_name, year=year, week=week).save()

@@ -73,7 +73,7 @@ class CSXParser(BaseParser):
             file = self.file
 
         pdf_text = self.get_pdf_text(file)
-        log(log.INFO, "--------Read pdf file CSX--------")
+        log(log.INFO, "Read pdf file CSX")
         # reads each of the pdf pages
 
         if not pdf_text:
@@ -82,7 +82,7 @@ class CSXParser(BaseParser):
             viewer.render()
             for canvas in viewer:
                 pdf_text += "".join(canvas.strings)
-        log(log.INFO, "--------Get pdf text CSX--------")
+        log(log.INFO, "Get pdf text CSX")
 
         matches = datefinder.find_dates(pdf_text)
 
@@ -179,4 +179,4 @@ class CSXParser(BaseParser):
                     company_name="CSX",
                     product_type=prod_name,
                 ).save()
-        log(log.INFO, "-------- Write data to the database CSX --------")
+        log(log.INFO, "Write data to the database CSX")

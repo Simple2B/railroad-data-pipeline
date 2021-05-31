@@ -71,13 +71,13 @@ class NorfolkSouthernParser(BaseParser):
         # reads each of the pdf pages
         pages_text = []
         pdf_reader = PyPDF2.PdfFileReader(file)
-        log(log.INFO, "--------Read pdf file Norfolk Southern--------")
+        log(log.INFO, "Read pdf file Norfolk Southern")
         for page_number in range(pdf_reader.numPages):
             page = pdf_reader.getPage(page_number)
             pdf_text = page.extractText()
             pages_text.append(pdf_text)
 
-        log(log.INFO, "--------Get pdf text Norfolk Southern--------")
+        log(log.INFO, "Get pdf text Norfolk Southern")
         all_text = []
 
         # format text on all pages
@@ -226,4 +226,4 @@ class NorfolkSouthernParser(BaseParser):
                             company_name="Nortfolk Southern",
                             product_type=prod_name,
                         ).save()
-        log(log.INFO, "-------- Write data to the database Norfolk Southern --------")
+        log(log.INFO, "Write data to the database Norfolk Southern")
