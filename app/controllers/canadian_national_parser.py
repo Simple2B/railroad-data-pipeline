@@ -19,11 +19,16 @@ class CanadianNationalParser(BaseParser):
         self.file = None  # method get_file() store here file stream
 
     def get_file(self) -> bool:
-        # if len(str(self.week_no)) == 1:
-        #     week = f"0{self.week_no}"
-        # else:
-        #     week = self.week_no
-        file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{int(self.week_no) - 1}.xlsx"  # noqa E501
+        if self.year_no != 2021:
+            if len(str(self.week_no)) == 1:
+                week = f"0{self.week_no}"
+            else:
+                week = self.week_no
+        else:
+            week = self.week_no
+        if self.year_no == 2020 and 14 < self.week_no < 22:
+            week = "%20" + str(week)
+        file_url = f"https://www.cn.ca/-/media/Files/Investors/Investor-Performance-Measures/{self.year_no}/Week{week}.xlsx"  # noqa E501
         file = urlopen(file_url)
         if file.url == 'https://www.cn.ca/404':
             log(log.ERROR, "File is not found.")
@@ -39,14 +44,12 @@ class CanadianNationalParser(BaseParser):
         if not file:
             file = self.file
 
-        # if not self.file:
-        #     log(log.ERROR, "Nothing to parse, file is not found")
-        #     return None
-
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
+        log(log.INFO, "--------Read xlsx file Canadian National--------")
         read_xlsx = pd.read_excel(file_xlsx, header=None)
         xlsx_dicts = read_xlsx.to_dict("records")
+        log(log.INFO, "--------Get xlsx text Canadian National--------")
 
         data_dicts = []
 
@@ -115,3 +118,4 @@ class CanadianNationalParser(BaseParser):
                     company_name="Canadian National",
                     product_type=prod_name,
                 ).save()
+        log(log.INFO, "-------- Write data to the database Canadian National --------")
