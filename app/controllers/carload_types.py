@@ -3,12 +3,36 @@ CARLOAD_TYPES = (
     {"ID": 2, "type": ["Chemicals", "Energy, Chemicals & Plastics"]},
     {"ID": 3, "type": ["Coal"]},
     {"ID": 4, "type": ["Coke"]},
-    {"ID": 5, "type": ["Containers", "Container"]},
+    {
+        "ID": 5,
+        "type": [
+            "Containers",
+            "Container",
+            "Intermodal Containers",
+            "Intermodal Containers",
+        ],
+    },
     {
         "ID": 6,
-        "type": ["Crushed Stone, Sand and Gravel", "Crushed Stone, Sand & Gravel"],
+        "type": [
+            "Crushed Stone, Sand and Gravel",
+            "Crushed Stone, Sand & Gravel",
+            "Crushed Stone, Gravel & Sand",
+            "Crushed Stone",
+            "SAND/GRAVEL",
+        ],
     },
-    {"ID": 7, "type": ["Farm Products, Except Grain", "Farm Products (excl. Grain)"]},
+    {
+        "ID": 7,
+        "type": [
+            "Farm Products, Except Grain",
+            "Farm Products (excl. Grain)",
+            "Farm Products",
+            "FARM (NO GRAIN)",
+            "Fertilizer & Sulphur",
+            'Farm Products Ex Grain'
+        ],
+    },
     {
         "ID": 8,
         "type": [
@@ -20,7 +44,16 @@ CARLOAD_TYPES = (
     },
     {"ID": 9, "type": ["Grain"]},
     {"ID": 10, "type": ["Grain Mill Products", "GRAIN MILL"]},
-    {"ID": 11, "type": ["Iron and Steel Scrap", "Iron & Steel Scrap"]},
+    {
+        "ID": 11,
+        "type": [
+            "Iron and Steel Scrap",
+            "Iron & Steel Scrap",
+            "Iron & Steel Scrap",
+            "Iron And Steel Scrap     ",
+            "IRON & STEEL SCRAP",
+        ],
+    },
     {
         "ID": 12,
         "type": [
@@ -30,6 +63,7 @@ CARLOAD_TYPES = (
             "LUMBER/WOOD",
             "FOREST PRODUCTS",
             "Forest Products",
+            "Lumber & Wood Products",
         ],
     },
     {"ID": 13, "type": ["Metallic Ores", "Metalic Ores"]},
@@ -41,6 +75,7 @@ CARLOAD_TYPES = (
             "Metals & Products",
             "METALS",
             "Metals, Minerals & Consumer Products",
+            "Metal Products",
         ],
     },
     {
@@ -49,6 +84,8 @@ CARLOAD_TYPES = (
             "Motor Vehicles and Equipment",
             "Motor Vehicles and Parts",
             "Motor Vehicles & Equipment",
+            "MOTOR VEHICLES",
+            "Automotive",
         ],
     },
     {
@@ -58,6 +95,8 @@ CARLOAD_TYPES = (
             "Non Metalic Minerals",
             "NONMETALIC MINERALS",
             "Non Metallic Minerals",
+            "Non-Metallic Minerals (incl. Phosphates)",
+            "Potash",
         ],
     },
     {
@@ -73,11 +112,40 @@ CARLOAD_TYPES = (
             "Pulp, Paper & Allied Products",
             "Pulp, Paper, & Allied Products",
             "PULP/PAPER",
+            "Pulp & Paper Products",
         ],
     },
-    {"ID": 20, "type": ["Stone, Clay and Glass Products"]},
-    {"ID": 21, "type": ["Trailer", "Trailers"]},
-    {"ID": 22, "type": ["Waste and Scrap Materials", "Waste & Nonferrous Scrap"]},
+    {
+        "ID": 20,
+        "type": [
+            "Stone, Clay and Glass Products",
+            "Stone, Clay & Glass Products",
+            "Intermodal Trailers",
+            "Stone, Clay & Glass Products",
+            "Stone, Clay, Glass",
+            "STONE/CLAY/GLASS",
+        ],
+    },
+    {
+        "ID": 21,
+        "type": [
+            "Trailer",
+            "Trailers",
+            "Intermodal Trailers",
+            "Trailers",
+            "TRAILERS",
+            "Intermodal"
+        ],
+    },
+    {
+        "ID": 22,
+        "type": [
+            "Waste and Scrap Materials",
+            "Waste & Nonferrous Scrap",
+            "Waste & Scrap Materials",
+            "WASTE/SCRAP",
+        ],
+    },
 )
 
 ALL_PROD_TYPES = []
