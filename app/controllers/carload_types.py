@@ -30,7 +30,7 @@ CARLOAD_TYPES = (
             "Farm Products",
             "FARM (NO GRAIN)",
             "Fertilizer & Sulphur",
-            'Farm Products Ex Grain'
+            "Farm Products Ex Grain",
         ],
     },
     {
@@ -134,7 +134,7 @@ CARLOAD_TYPES = (
             "Intermodal Trailers",
             "Trailers",
             "TRAILERS",
-            "Intermodal"
+            "Intermodal",
         ],
     },
     {

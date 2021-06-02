@@ -30,7 +30,9 @@ class CSXParser(BaseParser):
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--headless")
-            browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+            browser = webdriver.Chrome(
+                options=options, executable_path=conf.CHROME_DRIVER_PATH
+            )
             log(log.INFO, "Start get url CSX")
             browser.get(self.URL)
             log(log.INFO, "Got url CSX")
@@ -93,10 +95,10 @@ class CSXParser(BaseParser):
             if i >= COUNT_FIND_DATE:
                 break
 
-        pdf_text = re.sub(r'\s+', ' ', pdf_text)
-        pdf_text = pdf_text.replace('% Chg', ' % Chg ')
-        pdf_text = pdf_text.split('% Chg')[-1].strip()
-        pdf_text = pdf_text.replace('%', '% ')
+        pdf_text = re.sub(r"\s+", " ", pdf_text)
+        pdf_text = pdf_text.replace("% Chg", " % Chg ")
+        pdf_text = pdf_text.split("% Chg")[-1].strip()
+        pdf_text = pdf_text.replace("%", "% ")
 
         find_worlds = []
 
@@ -106,9 +108,9 @@ class CSXParser(BaseParser):
             find_worlds.append(t["name"])
 
         for word in find_worlds:
-            pdf_text = pdf_text.replace(word, f'{word} ')
+            pdf_text = pdf_text.replace(word, f"{word} ")
 
-        pdf_text = re.sub(r'\s+', ' ', pdf_text).strip()
+        pdf_text = re.sub(r"\s+", " ", pdf_text).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z0-9_\ \(\)\.\&\,\-]+)\s+"
@@ -166,9 +168,7 @@ class CSXParser(BaseParser):
                     YOYCarloads=product["week"]["current_year"]
                     - product["week"]["previous_year"],
                     QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-                    YOYQTDCarloads=product["QUARTER_TO_DATE"][
-                        "current_year"
-                    ]
+                    YOYQTDCarloads=product["QUARTER_TO_DATE"]["current_year"]
                     - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
                     YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
                     YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]

@@ -1,4 +1,3 @@
-# import re
 import tempfile
 from dateparser.search import search_dates
 from datetime import datetime
