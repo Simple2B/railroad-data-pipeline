@@ -79,7 +79,7 @@ class KansasCitySouthernParser(BaseParser):
         # remove spaces from the text that we read from the pdf file
         format_text = re.sub("\n", " ", pdf_text)
 
-        format_text = re.sub(r'\s+', ' ', format_text).strip()
+        format_text = re.sub(r"\s+", " ", format_text).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z\ \(\)\.\&\,\-]+)\s+"
