@@ -84,10 +84,17 @@ def test_kansas_city_southern_parser(client):
     parser = KansasCitySouthernParser(2021, 2)
     with open(KANSAS_CITY_SOUTHERN_TEST_DATA_FILE, "rb") as file:
         parser.parse_data(file=file)
-    # COMPANY_ID = "Kansas_City_Southern_2021_2_1"
-    # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
+    if Company.query.filter(Company.company_id == "Grain"):
+        consolidate = Company.query.filter(Company.carloads).first()
+        assert consolidate.carloads
+        if consolidate.carloads == 3721:
+            assert consolidate.carloads
+        # else:
+        #     assert 'error'
     parsed_data = Company.query.all()
     assert parsed_data
+    # COMPANY_ID = "Kansas_City_Southern_2021_2_1"
+    # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     # assert len(parsed_data) == 16
 
 

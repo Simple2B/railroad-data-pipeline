@@ -69,6 +69,7 @@ class KansasCitySouthernParser(BaseParser):
         pdf_text = ""
         # reads each of the pdf pages
         pdf_reader = PyPDF2.PdfFileReader(file)
+        pdf_reader
         log(log.INFO, "Read pdf file Kansas City")
         for page_number in range(pdf_reader.numPages):
             page = pdf_reader.getPage(page_number)
@@ -78,8 +79,7 @@ class KansasCitySouthernParser(BaseParser):
         # remove spaces from the text that we read from the pdf file
         format_text = re.sub("\n", " ", pdf_text)
 
-        # the text of which we have a string we make an array of values from it
-        format_text = " ".join(format_text.split()[12:])
+        format_text = re.sub(r'\s+', ' ', format_text).strip()
 
         PATTERN = (
             r"(?P<name>[a-zA-Z\ \(\)\.\&\,\-]+)\s+"
