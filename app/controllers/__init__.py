@@ -19,12 +19,12 @@ def data_scrap():
         for week in range(1, finish_week + 1):
             log(log.INFO, "=================== Week %d of %d", week, year)
             COMPANIES = {
-                CSXParser: "CSX",
-                UnionParser: "Union Parser",
-                NorfolkSouthernParser: "Norfolk Southern",
-                KansasCitySouthernParser: "Kansas City Southern Parser",
-                CanadianNationalParser: "Canadian National Parser",
-                BNSFParser: "BNSF Parser",
+                # CSXParser: "CSX",
+                # UnionParser: "Union Parser",
+                # NorfolkSouthernParser: "Norfolk Southern",
+                # KansasCitySouthernParser: "Kansas City Southern Parser",
+                # CanadianNationalParser: "Canadian National Parser",
+                # BNSFParser: "BNSF Parser",
                 CanadianPacificParser: "CanadianPacificParser",
             }
             for Parser, company_name in COMPANIES.items():
@@ -40,7 +40,6 @@ def data_scrap():
                 log(log.INFO, "----------- Start parser %s", company_name)
                 parser = Parser(year_no=year, week_no=week)
                 file = parser.get_file()
-                log(log.INFO, "Got file %s", company_name)
                 if not file:
                     log(
                         log.WARNING,
@@ -53,6 +52,7 @@ def data_scrap():
                     ):
                         continue
                 else:
+                    log(log.INFO, "Got file %s", company_name)
                     parser.parse_data()
                     log(log.INFO, "End parser data %s", company_name)
                 Passed(company_name=company_name, year=year, week=week).save()

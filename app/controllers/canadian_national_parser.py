@@ -114,6 +114,7 @@ class CanadianNationalParser(BaseParser):
                     week=self.week_no,
                     year=self.year_no,
                     company_name="Canadian National",
+                    carload_id=carload_id,
                     product_type=prod_name,
                 ).save()
         log(log.INFO, "Write data to the database Canadian National")

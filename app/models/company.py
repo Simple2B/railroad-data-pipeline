@@ -22,4 +22,5 @@ class Company(db.Model, ModelMixin):
     week = db.Column(db.Integer)
     year = db.Column(db.Integer)
     company_name = db.Column(db.String(64))
+    carload_id = db.Column(db.Integer)
     product_type = db.Column(db.String(64))

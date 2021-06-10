@@ -224,6 +224,7 @@ class NorfolkSouthernParser(BaseParser):
                             week=int(product["date"]["week_num"]),
                             year=int(product["date"]["year_num"]),
                             company_name="Nortfolk Southern",
+                            carload_id=carload_id,
                             product_type=prod_name,
                         ).save()
         log(log.INFO, "Write data to the database Norfolk Southern")

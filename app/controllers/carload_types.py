@@ -50,7 +50,7 @@ CARLOAD_TYPES = (
             "Iron and Steel Scrap",
             "Iron & Steel Scrap",
             "Iron & Steel Scrap",
-            "Iron And Steel Scrap     ",
+            "Iron And Steel Scrap ",
             "IRON & STEEL SCRAP",
         ],
     },
@@ -61,8 +61,6 @@ CARLOAD_TYPES = (
             "Lumber & Wood Products",
             "Lumber & Wood Products except Furniture",
             "LUMBER/WOOD",
-            "FOREST PRODUCTS",
-            "Forest Products",
             "Lumber & Wood Products",
         ],
     },
@@ -103,7 +101,14 @@ CARLOAD_TYPES = (
         "ID": 17,
         "type": ["Petroleum Products", "Petroleum & Petroleum Products", "PETROLEUM"],
     },
-    {"ID": 18, "type": ["Primary Forest Products"]},
+    {
+        "ID": 18,
+        "type": [
+            "Primary Forest Products",
+            "FOREST PRODUCTS",
+            "Forest Products",
+        ],
+    },
     {
         "ID": 19,
         "type": [
@@ -120,7 +125,6 @@ CARLOAD_TYPES = (
         "type": [
             "Stone, Clay and Glass Products",
             "Stone, Clay & Glass Products",
-            "Intermodal Trailers",
             "Stone, Clay & Glass Products",
             "Stone, Clay, Glass",
             "STONE/CLAY/GLASS",
@@ -130,6 +134,7 @@ CARLOAD_TYPES = (
         "ID": 21,
         "type": [
             "Trailer",
+            "Intermodal Trailers",
             "Trailers",
             "Intermodal Trailers",
             "Trailers",
