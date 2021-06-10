@@ -23,7 +23,11 @@ class CanadianPacificParser(BaseParser):
         self.link = None
 
     def scrapper(self, week: int, year: int) -> str or None:
-        if conf.CURRENT_WEEK - 1 != week or conf.CURRENT_YEAR != year:
+        if (
+            conf.CURRENT_WEEK - 1 != week
+            and conf.CURRENT_WEEK != week
+            or conf.CURRENT_YEAR != year
+        ):
             log(log.WARNING, "Links not found")
             return None
         options = webdriver.ChromeOptions()
@@ -35,7 +39,6 @@ class CanadianPacificParser(BaseParser):
         )
         log(log.INFO, "Start get url Canadian Pacific")
         browser.get(self.URL)
-        log(log.INFO, "Got url Canadian Pacific")
         generated_html = browser.page_source
         soup = BeautifulSoup(generated_html, "html.parser")
         tags = soup.find_all("a", class_="button-link")
