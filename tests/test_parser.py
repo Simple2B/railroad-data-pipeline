@@ -24,7 +24,7 @@ CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
 NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"
 )
-BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/20210501.pdf")
+BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/20210612_bnsf.pdf")
 
 
 @pytest.fixture
