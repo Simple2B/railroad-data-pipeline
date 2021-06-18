@@ -56,6 +56,7 @@ CARLOAD_TYPES = (
             "Iron And Steel Scrap ",
             "IRON & STEEL SCRAP",
             "Iron & Steel Scrap",
+            "Iron and steel scrap"
         ],
     },
     {
