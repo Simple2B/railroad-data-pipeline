@@ -106,7 +106,7 @@ def test_canadian_national_parser(client):
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     parsed_data = Company.query.all()
     assert parsed_data
-    # assert len(parsed_data) == 13
+    # assert len(parsed_data) == 18
 
 
 def test_bnsf_parser(client):
