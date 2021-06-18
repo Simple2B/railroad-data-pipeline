@@ -19,12 +19,12 @@ def data_scrap():
         for week in range(1, finish_week + 1):
             log(log.INFO, "=================== Week %d of %d", week, year)
             COMPANIES = {
-                # CSXParser: "CSX",
-                # UnionParser: "Union Parser",
-                # NorfolkSouthernParser: "Norfolk Southern",
-                # KansasCitySouthernParser: "Kansas City Southern Parser",
-                # CanadianNationalParser: "Canadian National Parser",
-                # BNSFParser: "BNSF Parser",
+                CSXParser: "CSX",
+                UnionParser: "Union Parser",
+                NorfolkSouthernParser: "Norfolk Southern",
+                KansasCitySouthernParser: "Kansas City Southern Parser",
+                CanadianNationalParser: "Canadian National Parser",
+                BNSFParser: "BNSF Parser",
                 CanadianPacificParser: "CanadianPacificParser",
             }
             for Parser, company_name in COMPANIES.items():

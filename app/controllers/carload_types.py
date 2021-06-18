@@ -17,6 +17,7 @@ CARLOAD_TYPES = (
         "type": [
             "Crushed Stone, Sand and Gravel",
             "Crushed Stone, Sand & Gravel",
+            "Crushed stone, sand, & gravel",
             "Crushed Stone, Gravel & Sand",
             "Crushed Stone",
             "SAND/GRAVEL",
@@ -31,6 +32,7 @@ CARLOAD_TYPES = (
             "FARM (NO GRAIN)",
             "Fertilizer & Sulphur",
             "Farm Products Ex Grain",
+            "Farm Products (excl. Grain)",
         ],
     },
     {
@@ -74,6 +76,7 @@ CARLOAD_TYPES = (
             "METALS",
             "Metals, Minerals & Consumer Products",
             "Metal Products",
+            "Metallic ores"
         ],
     },
     {
@@ -93,7 +96,9 @@ CARLOAD_TYPES = (
             "Non Metalic Minerals",
             "NONMETALIC MINERALS",
             "Non Metallic Minerals",
+            "Non-metallic minerals",
             "Non-Metallic Minerals (incl. Phosphates)",
+            "Non -Metal lic Minerals (incl. Phosphates)",
             "Potash",
         ],
     },
@@ -126,6 +131,7 @@ CARLOAD_TYPES = (
             "Stone, Clay and Glass Products",
             "Stone, Clay & Glass Products",
             "Stone, Clay & Glass Products",
+            "Stone, clay & glass products",
             "Stone, Clay, Glass",
             "STONE/CLAY/GLASS",
         ],
