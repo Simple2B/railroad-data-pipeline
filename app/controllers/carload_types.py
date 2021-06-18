@@ -1,8 +1,8 @@
 CARLOAD_TYPES = (
     {"ID": 1, "type": ["All Other Carloads", "All Other", "OTHER"]},
-    {"ID": 2, "type": ["Chemicals", "Energy, Chemicals & Plastics"]},
-    {"ID": 3, "type": ["Coal"]},
-    {"ID": 4, "type": ["Coke"]},
+    {"ID": 2, "type": ["Chemicals", "Energy, Chemicals & Plastics", "CHEMICALS"]},
+    {"ID": 3, "type": ["Coal", "COAL"]},
+    {"ID": 4, "type": ["Coke", "COKE"]},
     {
         "ID": 5,
         "type": [
@@ -30,6 +30,7 @@ CARLOAD_TYPES = (
             "Farm Products (excl. Grain)",
             "Farm Products",
             "FARM (NO GRAIN)",
+            "Farm (no grain)",
             "Fertilizer & Sulphur",
             "Farm Products Ex Grain",
             "Farm Products (excl. Grain)",
@@ -44,7 +45,7 @@ CARLOAD_TYPES = (
             "FOOD",
         ],
     },
-    {"ID": 9, "type": ["Grain"]},
+    {"ID": 9, "type": ["Grain", "GRAIN"]},
     {"ID": 10, "type": ["Grain Mill Products", "GRAIN MILL"]},
     {
         "ID": 11,
@@ -54,6 +55,7 @@ CARLOAD_TYPES = (
             "Iron & Steel Scrap",
             "Iron And Steel Scrap ",
             "IRON & STEEL SCRAP",
+            "Iron & Steel Scrap",
         ],
     },
     {
@@ -66,7 +68,10 @@ CARLOAD_TYPES = (
             "Lumber & Wood Products",
         ],
     },
-    {"ID": 13, "type": ["Metallic Ores", "Metalic Ores"]},
+    {
+        "ID": 13,
+        "type": ["Metallic Ores", "Metalic Ores", "Metallic ores", "METALLIC ORES"],
+    },
     {
         "ID": 14,
         "type": [
@@ -76,7 +81,6 @@ CARLOAD_TYPES = (
             "METALS",
             "Metals, Minerals & Consumer Products",
             "Metal Products",
-            "Metallic ores"
         ],
     },
     {
@@ -93,12 +97,14 @@ CARLOAD_TYPES = (
         "ID": 16,
         "type": [
             "Nonmetallic Minerals",
+            "Nonmetallic minerals",
             "Non Metalic Minerals",
             "NONMETALIC MINERALS",
             "Non Metallic Minerals",
             "Non-metallic minerals",
             "Non-Metallic Minerals (incl. Phosphates)",
             "Non -Metal lic Minerals (incl. Phosphates)",
+            "NON-METALIC MINERALS",
             "Potash",
         ],
     },
@@ -112,6 +118,7 @@ CARLOAD_TYPES = (
             "Primary Forest Products",
             "FOREST PRODUCTS",
             "Forest Products",
+            "LUMBER/WOOD",
         ],
     },
     {
@@ -155,6 +162,7 @@ CARLOAD_TYPES = (
             "Waste & Nonferrous Scrap",
             "Waste & Scrap Materials",
             "WASTE/SCRAP",
+            "Waste/Scrap",
         ],
     },
 )
