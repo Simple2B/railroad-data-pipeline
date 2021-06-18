@@ -95,7 +95,7 @@ def test_kansas_city_southern_parser(client):
     assert parsed_data
     # COMPANY_ID = "Kansas_City_Southern_2021_2_1"
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
-    # assert len(parsed_data) == 16
+    # assert len(parsed_data) == 22
 
 
 def test_canadian_national_parser(client):

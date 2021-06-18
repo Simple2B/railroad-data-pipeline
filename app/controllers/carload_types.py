@@ -1,6 +1,6 @@
 CARLOAD_TYPES = (
     {"ID": 1, "type": ["All Other Carloads", "All Other", "OTHER"]},
-    {"ID": 2, "type": ["Chemicals", "Energy, Chemicals & Plastics", "CHEMICALS"]},
+    {"ID": 2, "type": ["Chemicals", "Chemicals & Allied Products", "Energy, Chemicals & Plastics", "CHEMICALS"]},
     {"ID": 3, "type": ["Coal", "COAL"]},
     {"ID": 4, "type": ["Coke", "COKE"]},
     {
@@ -16,6 +16,8 @@ CARLOAD_TYPES = (
         "ID": 6,
         "type": [
             "Crushed Stone, Sand and Gravel",
+            "Crushed stone and gravel",
+            "Crushed Stone, Sand, & Gravel",
             "Crushed Stone, Sand & Gravel",
             "Crushed stone, sand, & gravel",
             "Crushed Stone, Gravel & Sand",
