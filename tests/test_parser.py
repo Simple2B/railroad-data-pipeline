@@ -19,7 +19,7 @@ KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(
 )
 CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week16.xlsx")
 CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
-    BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(12) (1).xlsx"
+    BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(14).xlsx"
 )
 NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"

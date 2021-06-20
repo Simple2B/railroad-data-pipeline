@@ -17,7 +17,7 @@ PyPDF2
 pdf-tools
 datefinder
 pandas
-# openyxl
+openpyxl
 dateparser
 xlrd==1.2.0
 webdriver-manager

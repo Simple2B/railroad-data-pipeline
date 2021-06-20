@@ -1,6 +1,15 @@
 CARLOAD_TYPES = (
     {"ID": 1, "type": ["All Other Carloads", "All Other", "OTHER"]},
-    {"ID": 2, "type": ["Chemicals", "Chemicals & Allied Products", "Energy, Chemicals & Plastics", "CHEMICALS"]},
+    {
+        "ID": 2,
+        "type": [
+            "Chemicals",
+            "Chemicals & Allied Products",
+            "Energy, Chemicals & Plastics",
+            "CHEMICALS",
+            "ENERGY, CHEMICALS & PLASTICS"
+        ],
+    },
     {"ID": 3, "type": ["Coal", "COAL"]},
     {"ID": 4, "type": ["Coke", "COKE"]},
     {
@@ -58,7 +67,7 @@ CARLOAD_TYPES = (
             "Iron And Steel Scrap ",
             "IRON & STEEL SCRAP",
             "Iron & Steel Scrap",
-            "Iron and steel scrap"
+            "Iron and steel scrap",
         ],
     },
     {
@@ -84,6 +93,7 @@ CARLOAD_TYPES = (
             "METALS",
             "Metals, Minerals & Consumer Products",
             "Metal Products",
+            "METALS, MINERALS & CONSUMER PRODUCTS"
         ],
     },
     {
@@ -94,6 +104,7 @@ CARLOAD_TYPES = (
             "Motor Vehicles & Equipment",
             "MOTOR VEHICLES",
             "Automotive",
+            "AUTOMOTIVE"
         ],
     },
     {
@@ -109,6 +120,7 @@ CARLOAD_TYPES = (
             "Non -Metal lic Minerals (incl. Phosphates)",
             "NON-METALIC MINERALS",
             "Potash",
+            "POTASH",
         ],
     },
     {
@@ -156,6 +168,7 @@ CARLOAD_TYPES = (
             "Trailers",
             "TRAILERS",
             "Intermodal",
+            "INTERMODAL"
         ],
     },
     {
