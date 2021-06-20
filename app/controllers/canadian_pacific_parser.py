@@ -1,6 +1,6 @@
 import tempfile
 import re
-from dateparser.search import search_dates
+# from dateparser.search import search_dates
 from datetime import datetime, date
 import time
 from urllib.request import urlopen
@@ -13,7 +13,7 @@ from .base_parser import BaseParser
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from config import BaseConfig as conf
-from .carload_types import find_carload_id, ALL_PROD_TYPES
+from .carload_types import find_carload_id
 from app.models import Company
 from app.logger import log
 
