@@ -1,10 +1,14 @@
 import tempfile
+import re
 from dateparser.search import search_dates
-from datetime import datetime
+from datetime import datetime, date
 import time
 from urllib.request import urlopen
 import pandas as pd
+
+# from openpyxl import load_workbook
 from sqlalchemy import and_
+# from sqlalchemy.sql.expression import update
 from .base_parser import BaseParser
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -75,77 +79,75 @@ class CanadianPacificParser(BaseParser):
         # Load spreadsheet
         file_xlsx = pd.ExcelFile(file)
         log(log.INFO, "Read xlsx file Canadian Pacific")
-        read_xlsx = pd.read_excel(file_xlsx, header=None)
+        read_xlsx = pd.read_excel(file_xlsx, sheet_name=1)
         xlsx_dicts = read_xlsx.to_dict("records")
         log(log.INFO, "Get xlsx text Canadian Pacific")
 
         data_dicts = []
 
-        xlsx_date = xlsx_dicts.pop(2)[1].replace("-", "")
+        for i_dict in xlsx_dicts:
+            for i, value in i_dict.items():
+                if re.search(r"\bcarloads\b", str(value).lower()):
+                    index = xlsx_dicts.index(i_dict)
+                    year = re.findall(r"(\d+)", value)
+                    data_dicts = xlsx_dicts[index + 2:]
 
-        dates = search_dates(xlsx_date)
-        date = []
+                    d_dicts = data_dicts[2:]
 
-        for x in dates[0]:
-            date.append(x)
+                    products = {}
+                    # data = {}
+                    # data_arr = []
+                    for d in d_dicts:
+                        # products_dict.append(products)
+                        data = {}
+                        data_arr = []
+                        data_arr.append(data)
+                        weeks = data_dicts[0]
+                        times = data_dicts[1]
+                        for i, week in weeks.items():
+                            if str(week) != "nan" and type(week) != str:
+                                for j, num in d.items():
+                                    if str(num) != "nan" and type(num) != str and i == j:
+                                        for k, data_time in times.items():
+                                            if str(data_time) != "nan" and type(data_time) != str and i == j == k:
+                                                data[str(week)] = {
+                                                    "num": str(num),
+                                                    "time": str(data_time),
+                                                    }
+                        products[d["Unnamed: 1"]] = data
 
-        date = date[1]
+                    # write data to the database
+                    for prod_name in products:
+                        product = products[prod_name]
+                        company_id = ""
+                        carload_id = find_carload_id(prod_name)
+                        for week_number, carload_number in product.items():
+                            company_id = f"Canadian_Pacific_{year[0]}_{week_number}_{carload_id}"
+                            company = Company.query.filter(
+                                and_(
+                                    Company.company_id == company_id, Company.product_type == prod_name
+                                )
+                            ).first()
+                            data = carload_number['time'].split(" ")[0].split("-")
+                            if not company and carload_id is not None:
+                                Company(
+                                    company_id=company_id,
+                                    carloads=int(carload_number['num']),
 
-        for xlsx_dict in xlsx_dicts:
-            type_name = xlsx_dict[1]
-            if type_name and type_name in ALL_PROD_TYPES:
-                data_dicts.append(xlsx_dict)
+                                    # YOYCarloads=product["week"]["current_year"]
+                                    # - product["week"]["previous_year"],
+                                    # QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
+                                    # YOYQTDCarloads=product["QUARTER_TO_DATE"]["current_year"]
+                                    # - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
+                                    # YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
+                                    # YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
+                                    # - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
 
-        # list of all products
-        products = {}
-
-        for data in data_dicts:
-            products[data[1]] = dict(
-                week=dict(
-                    current_year=data[2],
-                    previous_year=data[3],
-                    chg=round(data[5] * 100, 1),
-                ),
-                QUARTER_TO_DATE=dict(
-                    current_year=data[12],
-                    previous_year=data[13],
-                    chg=round(data[15] * 100, 1),
-                ),
-                YEAR_TO_DATE=dict(
-                    current_year=data[17],
-                    previous_year=data[18],
-                    chg=round(data[20] * 100, 1),
-                ),
-            )
-
-        # write data to the database
-        for prod_name, product in products.items():
-            company_id = ""
-            carload_id = find_carload_id(prod_name)
-            company_id = f"Canadian_Pacific_{self.year_no}_{self.week_no}_{carload_id}"
-            company = Company.query.filter(
-                and_(
-                    Company.company_id == company_id, Company.product_type == prod_name
-                )
-            ).first()
-
-            if not company and carload_id is not None:
-                Company(
-                    company_id=company_id,
-                    carloads=product["week"]["current_year"],
-                    YOYCarloads=product["week"]["current_year"]
-                    - product["week"]["previous_year"],
-                    QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-                    YOYQTDCarloads=product["QUARTER_TO_DATE"]["current_year"]
-                    - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                    YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                    YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                    - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-                    date=date,
-                    week=self.week_no,
-                    year=self.year_no,
-                    company_name="Canadian Pacific",
-                    carload_id=carload_id,
-                    product_type=prod_name,
-                ).save()
-        log(log.INFO, "Write data to the database Canadian Pacific")
+                                    date=date(int(data[0]), int(data[1]), int(data[2])),
+                                    week=int(week_number),
+                                    year=int(year[0]),
+                                    company_name="Canadian Pacific",
+                                    carload_id=carload_id,
+                                    product_type=prod_name,
+                                ).save()
+                        log(log.INFO, "Write data to the database Canadian Pacific")
