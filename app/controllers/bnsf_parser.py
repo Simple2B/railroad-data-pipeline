@@ -131,6 +131,8 @@ class BNSFParser(BaseParser):
                 result = int(val.replace(",", ""))
             elif val.count("."):
                 result = int(val.replace(".", ""))
+            elif val:
+                result = int(val)
             if result:
                 return result
             return 0
