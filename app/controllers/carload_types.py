@@ -68,6 +68,8 @@ CARLOAD_TYPES = (
             "IRON & STEEL SCRAP",
             "Iron & Steel Scrap",
             "Iron and steel scrap",
+            " Iron and steel scrap",
+            "Iron And Steel Scrap     ",
         ],
     },
     {
@@ -119,6 +121,7 @@ CARLOAD_TYPES = (
             "Non-Metallic Minerals (incl. Phosphates)",
             "Non -Metal lic Minerals (incl. Phosphates)",
             "NON-METALIC MINERALS",
+            "Non-metalic minerals",
             "Potash",
             "POTASH",
         ],
@@ -179,6 +182,9 @@ CARLOAD_TYPES = (
             "Waste & Scrap Materials",
             "WASTE/SCRAP",
             "Waste/Scrap",
+            "Waste / Scrap",
+            "Waste & non-ferrous scrap",
+            "Waste & Non ferrous Scrap"
         ],
     },
 )

@@ -1,5 +1,6 @@
 import tempfile
 import re
+
 # from dateparser.search import search_dates
 from datetime import datetime, date
 import time
@@ -8,6 +9,7 @@ import pandas as pd
 
 # from openpyxl import load_workbook
 from sqlalchemy import and_
+
 # from sqlalchemy.sql.expression import update
 from .base_parser import BaseParser
 from bs4 import BeautifulSoup
@@ -91,14 +93,9 @@ class CanadianPacificParser(BaseParser):
                     index = xlsx_dicts.index(i_dict)
                     year = re.findall(r"(\d+)", value)
                     data_dicts = xlsx_dicts[index + 2:]
-
                     d_dicts = data_dicts[2:]
-
                     products = {}
-                    # data = {}
-                    # data_arr = []
                     for d in d_dicts:
-                        # products_dict.append(products)
                         data = {}
                         data_arr = []
                         data_arr.append(data)
@@ -107,13 +104,21 @@ class CanadianPacificParser(BaseParser):
                         for i, week in weeks.items():
                             if str(week) != "nan" and type(week) != str:
                                 for j, num in d.items():
-                                    if str(num) != "nan" and type(num) != str and i == j:
+                                    if (
+                                        str(num) != "nan"
+                                        and type(num) != str
+                                        and i == j
+                                    ):
                                         for k, data_time in times.items():
-                                            if str(data_time) != "nan" and type(data_time) != str and i == j == k:
+                                            if (
+                                                str(data_time) != "nan"
+                                                and type(data_time) != str
+                                                and i == j == k
+                                            ):
                                                 data[str(week)] = {
                                                     "num": str(num),
                                                     "time": str(data_time),
-                                                    }
+                                                }
                         products[d["Unnamed: 1"]] = data
 
                     # write data to the database
@@ -122,27 +127,20 @@ class CanadianPacificParser(BaseParser):
                         company_id = ""
                         carload_id = find_carload_id(prod_name)
                         for week_number, carload_number in product.items():
-                            company_id = f"Canadian_Pacific_{year[0]}_{week_number}_{carload_id}"
+                            company_id = (
+                                f"Canadian_Pacific_{year[0]}_{week_number}_{carload_id}"
+                            )
                             company = Company.query.filter(
                                 and_(
-                                    Company.company_id == company_id, Company.product_type == prod_name
+                                    Company.company_id == company_id,
+                                    Company.product_type == prod_name,
                                 )
                             ).first()
-                            data = carload_number['time'].split(" ")[0].split("-")
+                            data = carload_number["time"].split(" ")[0].split("-")
                             if not company and carload_id is not None:
                                 Company(
                                     company_id=company_id,
-                                    carloads=int(carload_number['num']),
-
-                                    # YOYCarloads=product["week"]["current_year"]
-                                    # - product["week"]["previous_year"],
-                                    # QTDCarloads=product["QUARTER_TO_DATE"]["current_year"],
-                                    # YOYQTDCarloads=product["QUARTER_TO_DATE"]["current_year"]
-                                    # - products[prod_name]["QUARTER_TO_DATE"]["previous_year"],
-                                    # YTDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"],
-                                    # YOYYDCarloads=products[prod_name]["YEAR_TO_DATE"]["current_year"]
-                                    # - products[prod_name]["YEAR_TO_DATE"]["previous_year"],
-
+                                    carloads=int(carload_number["num"]),
                                     date=date(int(data[0]), int(data[1]), int(data[2])),
                                     week=int(week_number),
                                     year=int(year[0]),

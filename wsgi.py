@@ -10,7 +10,6 @@ from config import BaseConfig as conf
 
 app = create_app()
 
-
 # app.config.from_pyfile("config.cfg")
 
 
