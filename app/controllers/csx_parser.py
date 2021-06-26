@@ -102,19 +102,23 @@ class CSXParser(BaseParser):
 
         find_worlds = []
 
-        PATTERN_WORLD = r"(?P<name>[a-zA-Z\)]+)"
+        PATTERN_WORLD = r"(?P<name>[a-zA-Z\)\ ]+)"
 
         for t in re.finditer(PATTERN_WORLD, pdf_text):
             find_worlds.append(t["name"])
 
         for word in find_worlds:
-            pdf_text = pdf_text.replace(word, f"{word} ")
+            if word != ' ':
+                pdf_text = pdf_text.replace(word, f"{word} ")
+
+        pdf_text
 
         pdf_text = re.sub(r"\s+", " ", pdf_text).strip()
         pdf_text = pdf_text.replace(')', ') ')
         pdf_text = pdf_text.replace(' .', '.')
         pdf_text = pdf_text.replace(' ,', ',')
         pdf_text = pdf_text.replace(' )', ')')
+        pdf_text = pdf_text.replace('Products', 'Products ')
         pdf_text = re.sub(r"\s+", " ", pdf_text)
 
         PATTERN = (

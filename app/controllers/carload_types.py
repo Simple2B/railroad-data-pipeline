@@ -1,5 +1,5 @@
 CARLOAD_TYPES = (
-    {"ID": 1, "type": ["All Other Carloads", "All Other", "OTHER"]},
+    {"ID": 1, "type": ["All Other Carloads", "All Other", "OTHER", "Other Carloads"]},
     {
         "ID": 2,
         "type": [
@@ -7,7 +7,7 @@ CARLOAD_TYPES = (
             "Chemicals & Allied Products",
             "Energy, Chemicals & Plastics",
             "CHEMICALS",
-            "ENERGY, CHEMICALS & PLASTICS"
+            "ENERGY, CHEMICALS & PLASTICS",
         ],
     },
     {"ID": 3, "type": ["Coal", "COAL"]},
@@ -84,7 +84,12 @@ CARLOAD_TYPES = (
     },
     {
         "ID": 13,
-        "type": ["Metallic Ores", "Metalic Ores", "Metallic ores", "METALLIC ORES"],
+        "type": [
+            "Metallic Ores",
+            "Metalic Ores",
+            "Metallic ores",
+            "METALLIC ORES",
+        ],
     },
     {
         "ID": 14,
@@ -95,7 +100,7 @@ CARLOAD_TYPES = (
             "METALS",
             "Metals, Minerals & Consumer Products",
             "Metal Products",
-            "METALS, MINERALS & CONSUMER PRODUCTS"
+            "METALS, MINERALS & CONSUMER PRODUCTS",
         ],
     },
     {
@@ -106,7 +111,7 @@ CARLOAD_TYPES = (
             "Motor Vehicles & Equipment",
             "MOTOR VEHICLES",
             "Automotive",
-            "AUTOMOTIVE"
+            "AUTOMOTIVE",
         ],
     },
     {
@@ -120,6 +125,7 @@ CARLOAD_TYPES = (
             "Non-metallic minerals",
             "Non-Metallic Minerals (incl. Phosphates)",
             "Non -Metal lic Minerals (incl. Phosphates)",
+            "Non -Metallic Minerals (incl. Phosphates)",
             "NON-METALIC MINERALS",
             "Non-metalic minerals",
             "Potash",
@@ -171,7 +177,7 @@ CARLOAD_TYPES = (
             "Trailers",
             "TRAILERS",
             "Intermodal",
-            "INTERMODAL"
+            "INTERMODAL",
         ],
     },
     {
@@ -184,10 +190,12 @@ CARLOAD_TYPES = (
             "Waste/Scrap",
             "Waste / Scrap",
             "Waste & non-ferrous scrap",
-            "Waste & Non ferrous Scrap"
+            "Waste & Non ferrous Scrap",
         ],
     },
 )
+
+# FERTILIZER & SULPHUR
 
 ALL_PROD_TYPES = []
 for names in [i["type"] for i in CARLOAD_TYPES]:

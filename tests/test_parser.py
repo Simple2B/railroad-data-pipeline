@@ -55,7 +55,7 @@ def test_csx_parser(client):
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     parsed_data = Company.query.all()
     assert parsed_data
-    # assert len(parsed_data) == 21
+    # assert len(parsed_data) == 22
 
 
 def test_union_parser(client):
