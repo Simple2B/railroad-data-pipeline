@@ -62,28 +62,57 @@ class CanadianNationalParser(BaseParser):
         date = date[1]
 
         for xlsx_dict in xlsx_dicts:
+            type_name = xlsx_dict[0]
+            if type_name and type_name in [
+                "Other Carloads",
+                "Automotive",
+                "Food & Kindred Products",
+            ]:
+                data_dicts.append(xlsx_dict)
+
+        for xlsx_dict in xlsx_dicts:
             type_name = xlsx_dict[1]
             if type_name and type_name in ALL_PROD_TYPES:
                 data_dicts.append(xlsx_dict)
 
+        data_products = []
+        for data_dict in data_dicts:
+            data_product = {}
+            for ind in data_dict:
+                d = data_dict[ind]
+                if str(d) != "nan":
+                    dic = {ind: d}
+                    data_product.update(dic)
+            data_products.append(data_product)
+
+            d_products = []
+            for data in data_products:
+                d_product = {}
+                count = 0
+                for i, val in data.items():
+                    d = {count: val}
+                    count += 1
+                    d_product.update(d)
+                d_products.append(d_product)
+
         products = {}
 
-        for data in data_dicts:
-            products[data[1]] = dict(
+        for data in d_products:
+            products[data[0]] = dict(
                 week=dict(
-                    current_year=data[2],
-                    previous_year=data[3],
-                    chg=round(data[5] * 100, 1),
+                    current_year=data[1],
+                    previous_year=data[2],
+                    chg=round(data[4] * 100, 1),
                 ),
                 QUARTER_TO_DATE=dict(
-                    current_year=data[7],
-                    previous_year=data[8],
-                    chg=round(data[10] * 100, 1),
+                    current_year=data[5],
+                    previous_year=data[6],
+                    chg=round(data[8] * 100, 1),
                 ),
                 YEAR_TO_DATE=dict(
-                    current_year=data[12],
-                    previous_year=data[13],
-                    chg=round(data[15] * 100, 1),
+                    current_year=data[9],
+                    previous_year=data[10],
+                    chg=round(data[12] * 100, 1),
                 ),
             )
 
