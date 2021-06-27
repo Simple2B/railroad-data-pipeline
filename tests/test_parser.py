@@ -17,7 +17,8 @@ UNION_TEST_DATA_FILE2 = os.path.join(BASE_DIR, "data/pdf_unp_week_3_2021_carload
 KANSAS_CITY_SOUTHERN_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/week-17-05-01-2021-aar-carloads.pdf"
 )
-CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week23_CN.xlsx")
+# CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week23_CN.xlsx")
+CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week24_CN.xlsx")
 CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(14).xlsx"
 )
