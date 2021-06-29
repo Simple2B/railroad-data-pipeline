@@ -104,14 +104,21 @@ class CSXParser(BaseParser):
 
         PATTERN_WORLD = r"(?P<name>[a-zA-Z\)\ ]+)"
 
+        log(log.INFO, "Start find worlds like PATTERN_WORLD CSX")
+
         for t in re.finditer(PATTERN_WORLD, pdf_text):
             find_worlds.append(t["name"])
 
-        for word in find_worlds:
-            if word != ' ':
-                pdf_text = pdf_text.replace(word, f"{word} ")
+        log(log.INFO, "End find worlds like PATTERN_WORLD CSX")
 
-        pdf_text
+        find_worlds = [x.strip() for x in find_worlds if x.strip()]
+
+        log(log.INFO, "Start add space CSX")
+
+        for word in find_worlds:
+            pdf_text = pdf_text.replace(word, f"{word} ")
+
+        log(log.INFO, "End add space CSX")
 
         pdf_text = re.sub(r"\s+", " ", pdf_text).strip()
         pdf_text = pdf_text.replace(')', ') ')
