@@ -1,6 +1,7 @@
 from time import sleep
 import re
 from datetime import datetime
+from isoweek import Week
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from config import BaseConfig as conf
@@ -86,21 +87,22 @@ def scrapper(company: str, week: int, year: int, url: str) -> str or None:
         log(log.WARNING, "Links not found")
         return None
     elif company == "norfolk_southern":
+        date = Week(year, week)
+        month = date.day(0).month
         tags = soup.find_all("a")
+        log(log.INFO, "Get all links Norfolk Southern")
         link = [
             link.attrs["href"]
             for link in tags
-            if "weekly-performance-reports/AAR_Categories" in link.attrs["href"]
+            if f"weekly-performance-reports/{year}/investor-weekly-carloads" in link.attrs["href"]
         ]
-        time = datetime.now()
-        scrap_week = time.isocalendar()[1]
-        scrap_year = time.isocalendar()[0]
-        if week == scrap_week and scrap_year == year:
-            link = "http://www.nscorp.com" + link[0]
-            log(log.INFO, "Found pdf link: [%s]", link)
-            return link
-        log(log.WARNING, "Links not found")
-        return None
+        if not link:
+            log(log.WARNING, "Links not found")
+            return None
+        log(log.INFO, "Get link with pdf for Norfolk Southern")
+        link = "http://www.nscorp.com" + link[month-1]
+        log(log.INFO, "Found pdf link: [%s]", link)
+        return link
     elif company == 'canadian_pacific':
         tags = soup.find_all('a', class_="button-link")
         while len(tags) != 2:

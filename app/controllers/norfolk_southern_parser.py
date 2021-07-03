@@ -4,6 +4,7 @@ import tempfile
 import PyPDF2
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from isoweek import Week
 from config import BaseConfig as conf
 from app.logger import log
 from urllib.request import urlopen
@@ -21,36 +22,33 @@ class NorfolkSouthernParser(BaseParser):
         self.file = None  # method get_file() store here file stream
         self.link = None
 
-    def scrapper(self, week: int, year: int) -> str or None:
-        time = datetime.now()
-        scrap_week = time.isocalendar()[1]
-        scrap_year = time.isocalendar()[0]
-        if week == scrap_week and scrap_year == year:
-            link = self.link
-            options = webdriver.ChromeOptions()
-            options.add_argument("--no-sandbox")
-            options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--headless")
-            browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
-            log(log.INFO, "Start get url Norfolk Southern")
-            browser.get(self.URL)
-            log(log.INFO, "Get url Norfolk Southern")
-            generated_html = browser.page_source
-            soup = BeautifulSoup(generated_html, "html.parser")
-            tags = soup.find_all("a")
-            log(log.INFO, "Get all links Norfolk Southern")
-            link = [
-                link.attrs["href"]
-                for link in tags
-                if "weekly-performance-reports/AAR_Categories" in link.attrs["href"]
-            ]
-            log(log.INFO, "Get link with pdf for Norfolk Southern")
-
-            link = "http://www.nscorp.com" + link[0]
-            log(log.INFO, "Found pdf link: [%s]", link)
-            return link
-        log(log.WARNING, "Links not found")
-        return None
+    def scrapper(self) -> str or None:
+        date = Week(self.year_no, self.week_no)
+        month = date.day(0).month
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")
+        browser = webdriver.Chrome(options=options, executable_path=conf.CHROME_DRIVER_PATH)
+        log(log.INFO, "Start get url Norfolk Southern")
+        browser.get(self.URL)
+        log(log.INFO, "Get url Norfolk Southern")
+        generated_html = browser.page_source
+        soup = BeautifulSoup(generated_html, "html.parser")
+        tags = soup.find_all("a")
+        log(log.INFO, "Get all links Norfolk Southern")
+        link = [
+            link.attrs["href"]
+            for link in tags
+            if f"weekly-performance-reports/{self.year_no}/investor-weekly-carloads" in link.attrs["href"]
+        ]
+        if not link:
+            log(log.WARNING, "Links not found")
+            return None
+        log(log.INFO, "Get link with pdf for Norfolk Southern")
+        link = "http://www.nscorp.com" + link[month-1]
+        log(log.INFO, "Found pdf link: [%s]", link)
+        return link
 
     def get_file(self) -> bool:
         file_url = self.scrapper(self.week_no, self.year_no)
