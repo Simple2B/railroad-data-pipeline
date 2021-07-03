@@ -41,6 +41,7 @@ requests
 beautifulsoup4
 selenium
 PyMySQL
+isoweek
 
 flake8
 black

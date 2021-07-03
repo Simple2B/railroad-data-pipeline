@@ -1,6 +1,5 @@
 import pytest
 from app.controllers import (
-    scrapper,
     CSXParser,
     UnionParser,
     KansasCitySouthernParser,
@@ -8,6 +7,7 @@ from app.controllers import (
     CanadianPacificParser
 )
 from app.controllers import NorfolkSouthernParser, BNSFParser
+from app.controllers.scrapper import scrapper
 from config import BaseConfig as conf
 
 
