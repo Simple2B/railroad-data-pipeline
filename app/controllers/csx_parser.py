@@ -144,8 +144,19 @@ class CSXParser(BaseParser):
         # list of all products
         products = {}
 
+        # def get_int_val(val: str) -> int:
+        #     return int(val.replace(",", ""))
         def get_int_val(val: str) -> int:
-            return int(val.replace(",", ""))
+            result = None
+            if val.count(","):
+                result = int(val.replace(",", ""))
+            elif val.count("."):
+                result = int(val.replace(".", ""))
+            elif val:
+                result = int(val)
+            if result:
+                return result
+            return 0
 
         for line in re.finditer(PATTERN, pdf_text):
             products[line["name"].strip()] = dict(
