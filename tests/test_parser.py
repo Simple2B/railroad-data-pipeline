@@ -23,7 +23,7 @@ CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(14).xlsx"
 )
 NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
-    BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"
+    BASE_DIR, "data/investor-weekly-carloads-february-2021.pdf"
 )
 BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/20210612_bnsf.pdf")
 

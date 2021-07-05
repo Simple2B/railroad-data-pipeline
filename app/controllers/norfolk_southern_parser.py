@@ -1,8 +1,19 @@
 import re
 from datetime import datetime
+
+# import parser object from tike
+# from tika import parser
+
 # import datefinder
 import tempfile
 import PyPDF2
+
+from pdfrw import PdfReader
+# import unicode
+# import gzip
+
+# import pdfrw
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from isoweek import Week
@@ -55,7 +66,7 @@ class NorfolkSouthernParser(BaseParser):
         return link
 
     def get_file(self) -> bool:
-        file_url = self.scrapper(self.week_no, self.year_no)
+        file_url = self.scrapper()
         if file_url is None:
             return False
         file = urlopen(file_url)
@@ -68,6 +79,18 @@ class NorfolkSouthernParser(BaseParser):
     def parse_data(self, file=None):
         if not file:
             file = self.file
+
+        # the first method of parsing
+
+        doc = PdfReader(file.name)
+        for page in doc.pages:
+            bytestream = page.Contents.stream
+
+            d = bytestream.encode("utf-8")
+            d
+            
+
+        # the second method of parsing
 
         pdf_text = ""
         # reads each of the pdf pages
@@ -85,16 +108,14 @@ class NorfolkSouthernParser(BaseParser):
 
         # format text on all pages
         for text in pages_text:
-            format_text = re.sub("\n", " ", text)
-            format_text = format_text.split()
+            # format_text = re.sub("\n", " ", text)
+            format_text = text.split()
             all_text.append(format_text)
 
         # format_all_text_date = []
         format_all_text = []
 
         for text in all_text:
-            # i = all_text.index(text)
-            # i
             for key in text:
                 world_index = text.index("Norfolk")
                 if key == "Norfolk":
@@ -107,7 +128,32 @@ class NorfolkSouthernParser(BaseParser):
                     format_text = re.sub(r"(\-)\s+(\d)", r"\1\2", format_text)
                     format_all_text.append(format_text)
 
-        format_all_text
+        find_worlds = []
+
+        PATTERN_WORLD = r"(?P<name>[a-zA-Z\)\ ]+)"
+
+        log(log.INFO, "Start find worlds like PATTERN_WORLD Norfolk Southern")
+
+        for pdf_text in format_all_text:
+            for t in re.finditer(PATTERN_WORLD, pdf_text):
+                find_worlds.append(t["name"])
+
+        log(log.INFO, "End find worlds like PATTERN_WORLD Norfolk Southern")
+
+        find_worlds = [x.strip() for x in find_worlds if x.strip()]
+
+        log(log.INFO, "Start add space Norfolk Southern")
+
+        format_text = []
+
+        for pdf_text in format_all_text:
+            for word in find_worlds:
+                pdf_text = pdf_text.replace(word, f" {word} ")
+                pdf_text = re.sub(r"\s+", " ", pdf_text)
+
+            format_text.append(pdf_text)
+
+        log(log.INFO, "End add space Norfolk Southern")
 
         format_all_text_date = {}
 
@@ -116,7 +162,7 @@ class NorfolkSouthernParser(BaseParser):
         pattern_week3 = r"((Week[0-9][0-9]\b))"
         pattern_week4 = r"((Week [0-9]\b))"
 
-        for data in format_all_text:
+        for data in format_text:
             data = data.strip()
             found_1_week = re.findall(pattern_week1, data)
             found_2_week = re.findall(pattern_week2, data)
@@ -136,23 +182,26 @@ class NorfolkSouthernParser(BaseParser):
                 week_4 = int("".join(i for i in found_4_week[0][0] if i.isdigit()))
                 format_all_text_date[week_4] = data
 
-        del format_all_text_date[next(iter(format_all_text_date))]
+        # del format_all_text_date[next(iter(format_all_text_date))]
 
-        pattern_date = r"(To: ([0-9][0-9] -[0-9][0-9] -[0-9][0-9][0-9][0-9]))"
-        p_date = r"([0-9][0-9] -[0-9][0-9] -[0-9][0-9][0-9][0-9])"
+        pattern_date1 = r"(To: ([0-9][0-9] -[0-9][0-9] -[0-9][0-9][0-9][0-9]))"
+        pattern_date2 = r"(To : ([0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]))"
+        p_date1 = r"([0-9][0-9] -[0-9][0-9] -[0-9][0-9][0-9][0-9])"
 
         for index, text in format_all_text_date.items():
-            word = 'Chg'
+            word = "Chg"
             text = text.replace(word, "")
             text = re.sub(r"\s+", " ", text)
-            date = re.findall(pattern_date, text)
-            date = re.findall(p_date, date[0][0])
-            date = date[0].replace(' ', '')
-            date = datetime.strptime(date, "%m-%d-%Y")
-            format_all_text_date[index] = dict(
-                text=text,
-                date=date
-            )
+            if re.findall(pattern_date1, text):
+                date = re.findall(pattern_date1, text)
+                date = re.findall(p_date1, date[0][0])
+                date = date[0].replace(" ", "")
+                date = datetime.strptime(date, "%m-%d-%Y")
+            if re.findall(pattern_date2, text):
+                date = re.findall(pattern_date2, text)
+                date = date[0][1]
+                date = datetime.strptime(date, "%m-%d-%Y")
+            format_all_text_date[index] = dict(text=text, date=date)
 
         PATTERN_TEXT = (
             r"(?P<name>[a-zA-Z\ \.\&\,\ \*]+)\s+"
@@ -214,41 +263,39 @@ class NorfolkSouthernParser(BaseParser):
             val_text_date
             if ind_week == self.week_no:
                 week = ind_week
-                text_date = val_text_date['text']
-                date = val_text_date['date']
+                text_date = val_text_date["text"]
+                date = val_text_date["date"]
                 for line in re.finditer(PATTERN_TEXT, text_date):
                     products[line["name"].strip()] = dict(
-                            week=dict(
-                                current_year=get_int_val(line["w_current_year"]),
-                                previous_year=get_int_val(line["w_previous_year"]),
-                                chg=get_int_val(line["w_chg"]),
-                            ),
-                            QUARTER_TO_DATE=dict(
-                                current_year=get_int_val(line["q_current_year"]),
-                                previous_year=get_int_val(line["q_previous_year"]),
-                                chg=line["q_chg"],
-                            ),
-                            YEAR_TO_DATE=dict(
-                                current_year=get_int_val(line["y_current_year"]),
-                                previous_year=get_int_val(line["y_previous_year"]),
-                                chg=line["y_chg"],
-                            ),
-                            date=dict(
-                                week_num=week,
-                                date=date,
-                            ),
-                        )
+                        week=dict(
+                            current_year=get_int_val(line["w_current_year"]),
+                            previous_year=get_int_val(line["w_previous_year"]),
+                            chg=get_int_val(line["w_chg"]),
+                        ),
+                        QUARTER_TO_DATE=dict(
+                            current_year=get_int_val(line["q_current_year"]),
+                            previous_year=get_int_val(line["q_previous_year"]),
+                            chg=line["q_chg"],
+                        ),
+                        YEAR_TO_DATE=dict(
+                            current_year=get_int_val(line["y_current_year"]),
+                            previous_year=get_int_val(line["y_previous_year"]),
+                            chg=line["y_chg"],
+                        ),
+                        date=dict(
+                            week_num=week,
+                            date=date,
+                        ),
+                    )
         products
         # write data to the database
         for prod, prod_data in products.items():
             company_id = ""
             carload_id = find_carload_id(prod)
-            prod_week = prod_data["date"]['week_num']
-            prod_date = prod_data["date"]['date']
+            prod_week = prod_data["date"]["week_num"]
+            prod_date = prod_data["date"]["date"]
 
-            company_id = (
-                f"Norfolk_Southern_{self.year_no}_{prod_week}_{carload_id}"
-            )
+            company_id = f"Norfolk_Southern_{self.year_no}_{prod_week}_{carload_id}"
             company = Company.query.filter(
                 and_(
                     Company.company_id == company_id,
@@ -264,12 +311,8 @@ class NorfolkSouthernParser(BaseParser):
                     QTDCarloads=prod_data["QUARTER_TO_DATE"]["current_year"],
                     YOYQTDCarloads=prod_data["QUARTER_TO_DATE"]["current_year"]
                     - prod_data["QUARTER_TO_DATE"]["previous_year"],
-                    YTDCarloads=prod_data["YEAR_TO_DATE"][
-                        "current_year"
-                    ],
-                    YOYYDCarloads=prod_data["YEAR_TO_DATE"][
-                        "current_year"
-                    ]
+                    YTDCarloads=prod_data["YEAR_TO_DATE"]["current_year"],
+                    YOYYDCarloads=prod_data["YEAR_TO_DATE"]["current_year"]
                     - prod_data["YEAR_TO_DATE"]["previous_year"],
                     date=prod_date,
                     week=prod_week,
