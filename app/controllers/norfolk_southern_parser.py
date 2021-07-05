@@ -9,6 +9,7 @@ import tempfile
 import PyPDF2
 
 from pdfrw import PdfReader
+
 # import unicode
 # import gzip
 
@@ -88,7 +89,6 @@ class NorfolkSouthernParser(BaseParser):
 
             d = bytestream.encode("utf-8")
             d
-            
 
         # the second method of parsing
 
