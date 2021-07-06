@@ -15,6 +15,7 @@ bs4
 pdf-tools
 
 PyPDF2
+pdfplumber
 unicode
 pdf2image
 pytesseract

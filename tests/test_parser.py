@@ -6,8 +6,10 @@ from app.controllers import (
     UnionParser,
     KansasCitySouthernParser,
     CanadianNationalParser,
+    CanadianPacificParser,
+    NorfolkSouthernParser,
+    BNSFParser,
 )
-from app.controllers import CanadianPacificParser, NorfolkSouthernParser, BNSFParser
 from app.models import Company
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +24,17 @@ CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week24_CN.xlsx")
 CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(14).xlsx"
 )
+
+# NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
+#     BASE_DIR, "data/investor-weekly-carloads-february-2021.pdf"
+# )
+# NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
+#     BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"
+# )
 NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
-    BASE_DIR, "data/investor-weekly-carloads-february-2021.pdf"
+    BASE_DIR, "data/investor-weekly-carloads-july-2020.pdf"
 )
+
 BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/20210612_bnsf.pdf")
 
 
