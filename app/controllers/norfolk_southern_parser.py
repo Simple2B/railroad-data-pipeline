@@ -247,8 +247,6 @@ class NorfolkSouthernParser(BaseParser):
             return 0
 
         for ind_week, val_text_date in format_all_text_date.items():
-            ind_week
-            val_text_date
             if ind_week == self.week_no:
                 week = ind_week
                 text_date = val_text_date["text"]
