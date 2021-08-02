@@ -12,10 +12,22 @@ SQLAlchemy
 Werkzeug
 WTForms
 bs4
+pdf-tools
 
 PyPDF2
-pdf-tools
+pdfplumber
+unicode
+pdf2image
+pytesseract
+# fitz
+# pdfminer
+# pdfquery
+wheel
 datefinder
+pdfrw
+# zlib
+# tika
+
 pandas
 openpyxl
 dateparser

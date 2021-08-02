@@ -4,9 +4,10 @@ from app.controllers import (
     UnionParser,
     KansasCitySouthernParser,
     CanadianNationalParser,
-    CanadianPacificParser
+    CanadianPacificParser,
+    BNSFParser
 )
-from app.controllers import NorfolkSouthernParser, BNSFParser
+from app.controllers import NorfolkSouthernParser
 from app.controllers.scrapper import scrapper
 from config import BaseConfig as conf
 

@@ -6,8 +6,10 @@ from app.controllers import (
     UnionParser,
     KansasCitySouthernParser,
     CanadianNationalParser,
+    CanadianPacificParser,
+    NorfolkSouthernParser,
+    BNSFParser,
 )
-from app.controllers import CanadianPacificParser, NorfolkSouthernParser, BNSFParser
 from app.models import Company
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +24,17 @@ CANADIAN_NATIONAL_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/Week24_CN.xlsx")
 CANADIAN_PACIFIC_TEST_DATA_FILE = os.path.join(
     BASE_DIR, "data/CP-Weekly-RTMs-and-Carloads-(14).xlsx"
 )
+
+# NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
+#     BASE_DIR, "data/investor-weekly-carloads-february-2021.pdf"
+# )
+# NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
+#     BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"
+# )
 NORFOLK_SOUTHERN_TEST_DATA_FILE = os.path.join(
-    BASE_DIR, "data/investor-weekly-carloads-january-2021.pdf"
+    BASE_DIR, "data/investor-weekly-carloads-july-2020.pdf"
 )
+
 BNSF_TEST_DATA_FILE = os.path.join(BASE_DIR, "data/20210612_bnsf.pdf")
 
 
@@ -133,11 +143,11 @@ def test_canadian_pacific_parser(client):
 
 
 def test_norfolk_southern_parser(client):
-    parser = NorfolkSouthernParser(2021, 2)
+    parser = NorfolkSouthernParser(2021, 27)
     with open(NORFOLK_SOUTHERN_TEST_DATA_FILE, "rb") as file:
         parser.parse_data(file=file)
     # COMPANY_ID = 'Norfolk_Southern_2021_4_1'
     # parsed_data = Company.query.filter(Company.company_id == COMPANY_ID).all()
     parsed_data = Company.query.all()
     assert parsed_data
-    # assert len(parsed_data) == 21
+    # assert len(parsed_data) == 22
