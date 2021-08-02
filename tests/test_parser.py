@@ -143,7 +143,7 @@ def test_canadian_pacific_parser(client):
 
 
 def test_norfolk_southern_parser(client):
-    parser = NorfolkSouthernParser(2021, 2)
+    parser = NorfolkSouthernParser(2021, 27)
     with open(NORFOLK_SOUTHERN_TEST_DATA_FILE, "rb") as file:
         parser.parse_data(file=file)
     # COMPANY_ID = 'Norfolk_Southern_2021_4_1'
